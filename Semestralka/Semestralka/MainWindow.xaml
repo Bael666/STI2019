@@ -7,6 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Label Content="Jména" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="141"/>
+        <Label Content="Verze" HorizontalAlignment="Left" Margin="589,10,0,0" VerticalAlignment="Top" Width="195"/>
+        <Label Content="Volba měn" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
+        <ComboBox HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top" Width="120"/>
+        <DataGrid HorizontalAlignment="Left" Height="360" Margin="164,50,0,0" VerticalAlignment="Top" Width="620"/>
+        <Button Content="Graf" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Export" HorizontalAlignment="Left" Margin="10,155,0,0" VerticalAlignment="Top" Width="120"/>
+
+
     </Grid>
 </Window>
