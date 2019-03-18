@@ -24,17 +24,17 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         private const String urlBaseXML = "https://www.rb.cz/informacni-servis/kurzovni-listek";
         private const String urlEnd = "";
 
-        static void Main(string[] args) {
-            ABank rb = new RB();
-            Task download = rb.DownloadRateListAsync();
+        //static void Main(string[] args) {
+        //    ABank rb = new RB();
+        //    Task download = rb.DownloadRateListAsync();
 
-            download.Wait();
+        //    download.Wait();
 
-            rb.RateListsLoadAll();
-            foreach (var list in rb.getRateLists()) {
-                Console.WriteLine(list.ToString());
-            }
-        }
+        //    rb.RateListsLoadAll();
+        //    foreach (var list in rb.getRateLists()) {
+        //        Console.WriteLine(list.ToString());
+        //    }
+        //}
 
         public RB() : base(BANK_NAME) {
         }

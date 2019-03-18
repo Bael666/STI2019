@@ -15,18 +15,18 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         public CNB() : base(BANK_NAME) {
         }
 
-        public static void Main(String[] args) {
-            ABank cnb = new CNB();
+        //public static void Main(String[] args) {
+        //    ABank cnb = new CNB();
 
-            Task task = cnb.DownloadRateListAsync();
+        //    Task task = cnb.DownloadRateListAsync();
 
-            task.Wait();
+        //    task.Wait();
 
-            cnb.RateListsLoadAll();
-            foreach (var list in cnb.getRateLists()) {
-                Console.WriteLine(list.ToString());
-            }
-        }
+        //    cnb.RateListsLoadAll();
+        //    foreach (var list in cnb.getRateLists()) {
+        //        Console.WriteLine(list.ToString());
+        //    }
+        //}
 
         public override async Task DownloadRateListAsync() {
             String date = DateTimeParser.DateToUrlCNB(DateTime.Now);

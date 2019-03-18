@@ -16,18 +16,18 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         public CSOB() : base(BANK_NAME) {
         }
 
-        public static void Main(String[] args) {
-            ABank csob = new CSOB();
+        //public static void Main(String[] args) {
+        //    ABank csob = new CSOB();
 
-            Task task = csob.DownloadRateListAsync();
+        //    Task task = csob.DownloadRateListAsync();
 
-            task.Wait();
+        //    task.Wait();
 
-            csob.RateListsLoadAll();
-            foreach (var list in csob.getRateLists()) {
-                Console.WriteLine(list.ToString());
-            }
-        }
+        //    csob.RateListsLoadAll();
+        //    foreach (var list in csob.getRateLists()) {
+        //        Console.WriteLine(list.ToString());
+        //    }
+        //}
 
         public override async Task DownloadRateListAsync() {
             String date = DateTimeParser.DateToUrlCSOB(DateTime.Now);

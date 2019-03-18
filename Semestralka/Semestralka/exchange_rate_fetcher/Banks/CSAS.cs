@@ -21,18 +21,18 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         public CSAS() : base(BANK_NAME) {
         }
 
-        public static void Main(String[] args) {
-            ABank csas = new CSAS();
+        //public static void Main(String[] args) {
+        //    ABank csas = new CSAS();
 
-            Task task = csas.DownloadRateListAsync();
+        //    Task task = csas.DownloadRateListAsync();
 
-            task.Wait();
+        //    task.Wait();
             
-            csas.RateListsLoadAll();
-            foreach (var list in csas.getRateLists()) {
-                Console.WriteLine(list.ToString());
-            }
-        }
+        //    csas.RateListsLoadAll();
+        //    foreach (var list in csas.getRateLists()) {
+        //        Console.WriteLine(list.ToString());
+        //    }
+        //}
 
         public override async Task DownloadRateListAsync() {
             String date = DateTimeParser.DateToUrlCSAS(DateTime.Now);

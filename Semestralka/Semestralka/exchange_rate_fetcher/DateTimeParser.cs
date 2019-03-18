@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace sti_semestralka.exchange_rate_fetcher {
     static class DateTimeParser {
 
-        public static void Main(String[] args) {
+        //public static void Main(String[] args) {
 
-            var dateString = DateTime.Now.ToUniversalTime();
+        //    var dateString = DateTime.Now.ToUniversalTime();
             
-            Console.WriteLine(dateString);
+        //    Console.WriteLine(dateString);
             
-        }
+        //}
 
         public static string DateToFileName(DateTime dateTime) {
             var dateString = dateTime.ToString("MMddyyyy");

@@ -15,17 +15,17 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         private const String urlBase = "https://api.kb.cz/openapi/v1/exchange-rates?ratesValidityDate=";
         private const String urlEnd = "T06%3A00%3A00.000Z";
 
-        static void Main(string[] args) {
-            ABank kb = new KB();
-            Task download = kb.DownloadRateListAsync();
+        //static void Main(string[] args) {
+        //    ABank kb = new KB();
+        //    Task download = kb.DownloadRateListAsync();
 
-            download.Wait();
+        //    download.Wait();
 
-            kb.RateListsLoadAll();
-            foreach (var list in kb.getRateLists()) {
-                Console.WriteLine(list.ToString());
-            }
-        }
+        //    kb.RateListsLoadAll();
+        //    foreach (var list in kb.getRateLists()) {
+        //        Console.WriteLine(list.ToString());
+        //    }
+        //}
 
 
         public KB() : base(BANK_NAME) {
