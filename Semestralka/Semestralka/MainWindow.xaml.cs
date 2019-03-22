@@ -133,11 +133,10 @@ namespace Semestralka
                         bankDataBuy[i - 1].Add(buyDifference);
                     }
                 }
-                Graph graphSell = new Graph(currency + " - Prodej", dates, bankDataSell);
-                Graph graphBuy = new Graph(currency + " - Nákup", dates, bankDataBuy);
+                Graph graph = new Graph(currency, dates, bankDataSell, bankDataBuy);
+                
 
-                graphSell.Show();
-                graphBuy.Show();
+                graph.Show();
             }
         }
 

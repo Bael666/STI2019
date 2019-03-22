@@ -16,41 +16,62 @@ namespace Semestralka {
     public partial class Graph : Form {
         
 
-        public Graph(String title, DateTime[] dates, List<List<double>> bankData) {
+        public Graph(String title, DateTime[] dates, List<List<double>> bankDataSell, List<List<double>> bankDataBuy) {
             InitializeComponent();
-            init(title, dates, bankData);
+            init(title, dates, bankDataSell, bankDataBuy);
+            this.Text = "Vývoj ceny vůči České národní bance";
             
         }
 
-        private void init(String title, DateTime[] dates, List<List<double>> bankData) {
-            Chart chart = chart1;
-            chart.Series.Clear();
-            chart.Titles.Add(title);
-                                    
-            String[] bankNames = { "Komerční banka", "Raiffeisenbank", "Česká spořitelna", "Československá obchodní banka"};
-            Color[] colors = { System.Drawing.Color.Blue, System.Drawing.Color.Green, System.Drawing.Color.Red, System.Drawing.Color.Black};
+        private void init(String title, DateTime[] dates, List<List<double>> bankDataSell, List<List<double>> bankDataBuy) {
+            for (int b = 0; b < 2; b++) {
+                List<List<double>> bankData;
+                Chart chart;
+                String[] chartTitle = { title + " - Prodej", title + " - Nákup" };
 
-            for (int i = 0; i < bankData.Count; i++) {
-                var data = bankData[i];
-                var name = bankNames[i];
-
-                Series series = new Series {
-                    Name = name,
-                    Color = colors[i],
-                    IsVisibleInLegend = true,
-                    IsXValueIndexed = true,
-                    ChartType = SeriesChartType.Column
-                };
-
-                for (int j = 0; j < dates.Length; j++) {
-                    series.Points.AddXY(dates[j], data[j]);
+                if (b == 0) {
+                    bankData = bankDataSell;
+                    chart = chart1;
+                } else {
+                    bankData = bankDataBuy;
+                    chart = chart2;
                 }
 
-                chart.Series.Add(series);
+                chart.Titles.Add(chartTitle[b]);
 
+
+                chart.Series.Clear();
+                                    
+                String[] bankNames = { "Komerční banka", "Raiffeisenbank", "Česká spořitelna", "Československá obchodní banka"};
+                Color[] colors = { System.Drawing.Color.Blue, System.Drawing.Color.Green, System.Drawing.Color.Red, System.Drawing.Color.Black};
+
+            
+                
+                    
+                    for (int i = 0; i < bankData.Count; i++) {
+                    var data = bankData[i];
+                    var name = bankNames[i];
+
+                    Series series = new Series {
+                        Name = name,
+                        Color = colors[i],
+                        IsVisibleInLegend = true,
+                        IsXValueIndexed = true,
+                        ChartType = SeriesChartType.Column
+                    };
+
+                    for (int j = 0; j < dates.Length; j++) {
+                        series.Points.AddXY(dates[j], data[j]);
+                    }
+
+
+                    chart.Series.Add(series);
+                    
+
+                }
+                chart.Invalidate();
             }
             
-            chart.Invalidate();
         }
     }
 }
