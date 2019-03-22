@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace sti_semestralka.exchange_rate_fetcher.Banks {
     class CNB : ABank {
         // example url: https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt?date=02.03.2019
-        private const String BANK_NAME = "CNB";
+        public const String BANK_NAME = "CNB";
         private const String urlBase = "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt?date=";
         private const String urlEnd = "";
 
@@ -34,9 +34,9 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
             RateList rateList = new RateList(DateTime.Now, exchangeRateListFolderPath);
             String responseData;
             using (var htttpClient = new HttpClient()) {
-                using (var response = await htttpClient.GetAsync(urlBase + date)) {
+                using (var response = await htttpClient.GetAsync(urlBase + date).ConfigureAwait(false)) {
 
-                    responseData = await response.Content.ReadAsStringAsync();
+                    responseData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 }
 

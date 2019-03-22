@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace sti_semestralka.exchange_rate_fetcher.Banks {
     class KB : ABank {
         // example url: https://api.kb.cz/openapi/v1/exchange-rates?ratesValidityDate=2019-03-14T06%3A00%3A00.000Z
-        private const String BANK_NAME = "KB";
+        public const String BANK_NAME = "Komercni banka";
         private const String urlBase = "https://api.kb.cz/openapi/v1/exchange-rates?ratesValidityDate=";
         private const String urlEnd = "T06%3A00%3A00.000Z";
 
@@ -39,9 +39,9 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
 
             using (var htttpClient = new HttpClient()) {
                 
-                using (var response = await htttpClient.GetAsync(urlBase + date + urlEnd)) {
+                using (var response = await htttpClient.GetAsync(urlBase + date + urlEnd).ConfigureAwait(false)) {
 
-                    responseData = await response.Content.ReadAsStringAsync();
+                    responseData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 }
                 

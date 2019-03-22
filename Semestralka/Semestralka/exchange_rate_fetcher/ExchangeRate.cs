@@ -7,12 +7,17 @@ using System.Threading.Tasks;
 
 namespace sti_semestralka.exchange_rate_fetcher
 {
-    class ExchangeRate
+    public class ExchangeRate
     {
-        private String currency;
-        private int unit;
-        private float buyRate;
-        private float sellRate;
+        //private String currency;
+        //private int unit;
+        //private float buyRate;
+        //private float sellRate;
+
+        public string currency { get; set; }
+        public int unit { get; set; }
+        public float buyRate { get; set; }
+        public float sellRate { get; set; }
 
         public ExchangeRate(String currency, int unit, float buyRate, float sellRate) {
             setCurrency(currency);

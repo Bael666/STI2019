@@ -14,7 +14,7 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         // 
         //example: https://www.porovnej24.cz/kurzy/ceska-sporitelna/devizy/14.03.2019
         //
-        private const String BANK_NAME = "CSAS";
+        public const String BANK_NAME = "Ceska sporitelna";
         private const String urlBase = "https://www.porovnej24.cz/kurzy/ceska-sporitelna/devizy/";
         private const String urlEnd = "";
 
@@ -41,9 +41,9 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
 
             using (var httpClient = new HttpClient { }) {
 
-                using (var response = await httpClient.GetAsync(urlBase + date + urlEnd)) {
+                using (var response = await httpClient.GetAsync(urlBase + date + urlEnd).ConfigureAwait(false)) {
 
-                    responseData = await response.Content.ReadAsStringAsync();
+                    responseData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 }
 
             }
