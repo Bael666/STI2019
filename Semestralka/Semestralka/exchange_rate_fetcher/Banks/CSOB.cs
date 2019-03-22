@@ -9,7 +9,7 @@ using System.Xml;
 namespace sti_semestralka.exchange_rate_fetcher.Banks {
     class CSOB : ABank {
         // example url : https://www.csob.cz/portal/lide/kurzovni-listek/-/date/2019-02-28/kurzovni-listek.xml
-        private const String BANK_NAME = "CSOB";
+        public const String BANK_NAME = "CSOB";
         private const String urlBase = "https://www.csob.cz/portal/lide/kurzovni-listek/-/date/";
         private const String urlEnd = "/kurzovni-listek.xml";
 
@@ -35,9 +35,9 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
             RateList rateList = new RateList(DateTime.Now, exchangeRateListFolderPath);
             String responseData;
             using (var htttpClient = new HttpClient()) {
-                using (var response = await htttpClient.GetAsync(urlBase + date + urlEnd)) {
+                using (var response = await htttpClient.GetAsync(urlBase + date + urlEnd).ConfigureAwait(false)) {
 
-                    responseData = await response.Content.ReadAsStringAsync();
+                    responseData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 }
 
@@ -47,13 +47,13 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
                 XmlNodeList countryNodes = xmlDoc.DocumentElement.SelectNodes("/ExchangeRate/Country");
 
                 foreach (XmlNode country in countryNodes) {
-                    var currency = country.Attributes["ID"].Value;
-                    var unit = country.Attributes["quota"].Value;
+                    string currency = country.Attributes["ID"].Value;
+                    int unit = int.Parse(country.Attributes["quota"].Value);
                     XmlNode FXcashless = country.SelectSingleNode("FXcashless");
-                    var buyRate = FXcashless.Attributes["Buy"].Value;
-                    var sellRate = FXcashless.Attributes["Sale"].Value;
+                    float buyRate = float.Parse(FXcashless.Attributes["Buy"].Value.ToString().Replace('.', ','));
+                    float sellRate = float.Parse(FXcashless.Attributes["Sale"].Value.ToString().Replace('.', ','));
 
-                    var exchangeRate = new ExchangeRate(currency, int.Parse(unit), float.Parse(buyRate), float.Parse(sellRate));
+                    var exchangeRate = new ExchangeRate(currency, unit, buyRate, sellRate);
 
                     rateList.AddExchangeRate(exchangeRate);
                 }

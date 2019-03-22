@@ -1,25 +1,31 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 namespace sti_semestralka.exchange_rate_fetcher {
-    class RateList {
+    public class RateList {
 
         private DateTime date;
-        private ArrayList exchangeRates;
+        private List<ExchangeRate> exchangeRates;
         private String filePath;
 
         private RateList(DateTime date) {
             this.date = date;
-            this.exchangeRates = new ArrayList();
+            this.exchangeRates = new List<ExchangeRate>();
         }
 
         public RateList(DateTime date, String folderPath) : this(date) {
             this.filePath = Path.Combine(folderPath, DateTimeParser.DateToFileName(date));
         }
 
-        public ArrayList getExchangeRates() {
+        public List<ExchangeRate> getExchangeRates() {
             return exchangeRates;
+        }
+
+        public DateTime GetDate()
+        {
+            return date;
         }
 
         public void AddExchangeRate(ExchangeRate exchangeRate) {
@@ -38,7 +44,7 @@ namespace sti_semestralka.exchange_rate_fetcher {
         }
 
         public void LoadExchangeRates() {
-            this.exchangeRates = new ArrayList();
+            this.exchangeRates = new List<ExchangeRate>();
 
             String line;
             String[] exchangeRateData;

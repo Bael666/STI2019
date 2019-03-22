@@ -19,7 +19,7 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         // https://www.rb.cz/informacni-servis/kurzovni-listek?date=2019-03-04
         // and then get url from button and fetch xml from there
         //
-        private const String BANK_NAME = "RB";
+        public const String BANK_NAME = "Reifeisenbank";
         private const String urlBase = "https://www.rb.cz/informacni-servis/kurzovni-listek?date=";
         private const String urlBaseXML = "https://www.rb.cz/informacni-servis/kurzovni-listek";
         private const String urlEnd = "";
@@ -47,9 +47,9 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
             
             using (var htttpClient = new HttpClient()) {
                 
-                using (var response = await htttpClient.GetAsync(urlBase + date)) {
+                using (var response = await htttpClient.GetAsync(urlBase + date).ConfigureAwait(false)) {
 
-                    responseData = await response.Content.ReadAsStringAsync();
+                    responseData = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 }
 
@@ -72,9 +72,9 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
                 // if linkToXml is empty, no url found
 
                 String xml;
-                using (var response = await htttpClient.GetAsync(urlBaseXML + linkToXML)) {
+                using (var response = await htttpClient.GetAsync(urlBaseXML + linkToXML).ConfigureAwait(false)) {
 
-                    xml = await response.Content.ReadAsStringAsync();
+                    xml = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 }
 
@@ -85,12 +85,12 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
                 var saleNode = xmlDoc.DocumentElement.SelectSingleNode("/exchange_rates/exchange_rate[@type='XML_RATE_TYPE_EBNK_SALE_DEVIZA']");
 
                 foreach (XmlNode currencyNode in buyNode.ChildNodes) {
-                    var currency = currencyNode.Attributes["name"].Value;
-                    var unit = currencyNode.Attributes["quota"].Value;
-                    var buyRate = currencyNode.Attributes["rate"].Value;
-                    var sellRate = saleNode.SelectSingleNode("currency[@name='" + currency + "']/@rate").Value;
+                    string currency = currencyNode.Attributes["name"].Value.ToString();
+                    int unit = int.Parse(currencyNode.Attributes["quota"].Value.ToString());
+                    float buyRate = float.Parse(currencyNode.Attributes["rate"].Value.ToString().Replace('.',','));
+                    float sellRate = float.Parse(saleNode.SelectSingleNode("currency[@name='" + currency + "']/@rate").Value.ToString().Replace('.', ','));
 
-                    var exchangeRate = new ExchangeRate(currency, int.Parse(unit), float.Parse(buyRate), float.Parse(sellRate));
+                    var exchangeRate = new ExchangeRate(currency, unit, buyRate, sellRate);
 
                     rateList.AddExchangeRate(exchangeRate);
                 }

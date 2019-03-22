@@ -1,15 +1,16 @@
 ﻿
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace sti_semestralka.exchange_rate_fetcher
 {
-    abstract class ABank
+    public abstract class ABank
     {
-        protected String name;
-        protected ArrayList rateLists;
+        public String name;
+        protected List<RateList> rateLists;
         protected String folderPath;
         protected String exchangeRateListFolderPath;
         // BASE_PATH -> misto ze ktereho budou moci aktualizovane verze brat stare data
@@ -19,7 +20,7 @@ namespace sti_semestralka.exchange_rate_fetcher
 
         public ABank(String name) {
             this.name = name;
-            this.rateLists = new ArrayList();
+            this.rateLists = new List<RateList>();
             BASE_PATH = Directory.GetCurrentDirectory();
             this.folderPath = Path.Combine(BANK_FOLDER, name);
             this.exchangeRateListFolderPath = Path.Combine(folderPath, EXCHANGE_RATE_FOLDER);
@@ -30,7 +31,7 @@ namespace sti_semestralka.exchange_rate_fetcher
         abstract public Task DownloadRateListAsync();
 
         public void RateListsLoadAll() {
-            rateLists = new ArrayList();
+            rateLists = new List<RateList>();
             String[] fileNames = Directory.GetFiles(this.exchangeRateListFolderPath);
             String date;
             foreach (String fileName in fileNames) {
@@ -45,7 +46,7 @@ namespace sti_semestralka.exchange_rate_fetcher
 
         abstract public void RateListsLoadMonth();
 
-        public ArrayList getRateLists() {
+        public List<RateList> getRateLists() {
             return rateLists;
         }
 
