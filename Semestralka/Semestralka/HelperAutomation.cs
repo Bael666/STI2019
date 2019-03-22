@@ -34,5 +34,25 @@ namespace Semestralka
                 }
             }
         }
+
+        public static void CountDifference(Dictionary<Tuple<string, DateTime>, List<MergeRates>> dictMergeRates)
+        {
+            //var yesterdayCollection = dictMergeRates.Where(x => x.Key.Item2 == DateTime.Now.AddDays(-1));
+            //var listValuesYesterday = yesterdayCollection.Select(x => x.Value).First();
+            var todayCollection = dictMergeRates.Where(x => x.Key.Item2 == DateTime.Now.Date);
+            var listValuesToday = todayCollection.Select(x => x.Value).ToList();
+
+            foreach(var mena in listValuesToday)
+            {
+                var cnb = mena[0];
+                float a = float.Parse(cnb.prodej);
+                for (int i = 1; i < mena.Count(); i++)
+                {
+                    float b = float.Parse(mena[i].prodej);
+                    mena[i].změna = (((b - a) * 100) / a).ToString();
+                }
+            }     
+        }
+
     }
 }

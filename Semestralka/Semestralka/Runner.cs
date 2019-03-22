@@ -70,6 +70,7 @@ namespace Semestralka
             }
 
             HelperAutomation.TransformIntoDict(listBank, dictMergeRates);
+            HelperAutomation.CountDifference(dictMergeRates);
         }
     }
 }

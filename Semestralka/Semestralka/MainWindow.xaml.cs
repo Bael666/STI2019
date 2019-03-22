@@ -30,6 +30,36 @@ namespace Semestralka
         public MainWindow()
         {
             InitializeComponent();
+            DataGridTextColumn c1 = new DataGridTextColumn();
+            c1.Header = "banka";
+            c1.Binding = new Binding("banka");
+            c1.Width = 110;
+            dataGrid.Columns.Add(c1);
+            //DataGridTextColumn c2 = new DataGridTextColumn();
+            //c2.Header = "měna";
+            //c2.Width = 110;
+            //c2.Binding = new Binding("měna");
+            //dataGrid.Columns.Add(c2);
+            DataGridTextColumn c2 = new DataGridTextColumn();
+            c2.Header = "množství";
+            c2.Width = 110;
+            c2.Binding = new Binding("množství");
+            dataGrid.Columns.Add(c2);
+            DataGridTextColumn c3 = new DataGridTextColumn();
+            c3.Header = "nákup";
+            c3.Width = 110;
+            c3.Binding = new Binding("nákup");
+            dataGrid.Columns.Add(c3);
+            DataGridTextColumn c4 = new DataGridTextColumn();
+            c4.Header = "prodej";
+            c4.Width = 110;
+            c4.Binding = new Binding("prodej");
+            dataGrid.Columns.Add(c4);
+            DataGridTextColumn c5 = new DataGridTextColumn();
+            c5.Header = "změna";
+            c5.Width = 110;
+            c5.Binding = new Binding("změna");
+            dataGrid.Columns.Add(c5);
             Connection.CheckingConnection();
             BankInit();
         }
@@ -142,7 +172,23 @@ namespace Semestralka
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
         {
-
+            if (dataGrid.Items.Count == 0)
+            {
+                System.Windows.MessageBox.Show("No data available");
+            }
+            else
+            {
+                using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+                {
+                    //dialog.SelectedPath = settingshandler.getStorageTB();
+                    System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                    if (result.ToString() == "OK")
+                    {
+                        Save.ExportFilesToExcel((dataGrid.Items.OfType<MergeRates>() != null) ? dataGrid.Items.OfType<MergeRates>().ToList() : null, dialog.SelectedPath); //dataGrid.SelectedItems.Cast<GitFile>().ToList()
+                        System.Windows.MessageBox.Show("Saved");
+                    }
+                }
+            }
         }
 
         private void lbVolba_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -160,52 +206,30 @@ namespace Semestralka
                 } catch (KeyNotFoundException error) {
                     data = new List<MergeRates>();
                 }
-                //foreach(var item in data)
-                //{
-                //    dataGrid.Items.Add(item);
 
-                //}
-                //dataGrid.ItemsSource = data;
-
-
-
-                DataGridTextColumn c1 = new DataGridTextColumn();
-                c1.Header = "banka";
-                c1.Binding = new Binding("banka");
-                c1.Width = 110;
-                dataGrid.Columns.Add(c1);
-                DataGridTextColumn c2 = new DataGridTextColumn();
-                c2.Header = "měna";
-                c2.Width = 110;
-                c2.Binding = new Binding("měna");
-                dataGrid.Columns.Add(c2);
-                DataGridTextColumn c3 = new DataGridTextColumn();
-                c3.Header = "množství";
-                c3.Width = 110;
-                c3.Binding = new Binding("množství");
-                dataGrid.Columns.Add(c3);
-                DataGridTextColumn c4 = new DataGridTextColumn();
-                c4.Header = "nákup";
-                c4.Width = 110;
-                c4.Binding = new Binding("nákup");
-                dataGrid.Columns.Add(c4);
-                DataGridTextColumn c5 = new DataGridTextColumn();
-                c5.Header = "prodej";
-                c5.Width = 110;
-                c5.Binding = new Binding("prodej");
-                dataGrid.Columns.Add(c5);
-                DataGridTextColumn c6 = new DataGridTextColumn();
-                c6.Header = "změna";
-                c6.Width = 110;
-                c6.Binding = new Binding("změna");
-                dataGrid.Columns.Add(c6);
+                dataGrid.Items.Add(new MergeRates(strItem)); // hlavicka mena
 
                 foreach (var item in data)
                 {
                     dataGrid.Items.Add(item);
                 }
 
-                dataGrid.Items.Add(new MergeRates());
+                // obarveni hlavicek - nefunkcni nevim proc 
+                foreach (MergeRates item in dataGrid.Items.OfType<MergeRates>())
+                {
+                    var row = dataGrid.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
+                    if (item.banka == "")
+                    {
+                        try
+                        {
+                            row.Background = Brushes.Red;
+                        }
+                        catch
+                        {
+                            //nevim proc je row nekdy null
+                        }
+                    }
+                }
             }           
         }
     }
