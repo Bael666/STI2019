@@ -25,6 +25,8 @@ namespace Semestralka
     public partial class MainWindow : Window
     {
         private static Dictionary<Tuple<string, DateTime>, List<MergeRates>> dictMergeRates = new Dictionary<Tuple<string, DateTime>, List<MergeRates>>();
+        List<ABank> listBank;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -64,7 +66,7 @@ namespace Semestralka
 
         public void BankInit()
         {
-            List<ABank> listBank = new List<ABank>();
+            listBank = new List<ABank>();
             listBank.Add(new CNB());
             listBank.Add(new KB());
             listBank.Add(new RB());
@@ -77,10 +79,19 @@ namespace Semestralka
 
             // naplneni list boxu
             lbVolba.SelectionMode = SelectionMode.Multiple;
-            foreach (var rate in listBank[0].getRateLists()[0].getExchangeRates())
-            {
-                lbVolba.Items.Add(rate.currency);
+            
+            //spusti se pred stazenim, hazi exception
+            //foreach (var rate in listBank[0].getRateLists()[0].getExchangeRates()) {
+            //    lbVolba.Items.Add(rate.currency);
+            //}
+
+            String[] currencies = {"AUD", "BRL", "BGN", "CNY", "DKK", "EUR", "PHP", "HKD", "HRK", "INR", "IDR", "ISK", "ILS", "JPY", "ZAR", "CAD", "KRW",
+                "HUF", "MYR", "MXN", "XDR", "NOK", "NZD", "PLN", "RON", "RUB", "SGD", "SEK", "CHF", "THB", "TRY", "USD", "GBP" };
+
+            foreach (var currency in currencies) {
+                lbVolba.Items.Add(currency);
             }
+            
 
             try
             {
@@ -94,7 +105,69 @@ namespace Semestralka
 
         private void btnGraf_Click(object sender, RoutedEventArgs e)
         {
+            DateTime[] dates = new DateTime[] { DateTime.Today.AddDays(-6), DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-4),
+                DateTime.Today.AddDays(-3), DateTime.Today.AddDays(-2), DateTime.Today.AddDays(-1), DateTime.Today};
 
+            
+
+            foreach (Object selecteditem in lbVolba.SelectedItems) {
+                string currency = selecteditem as String;
+                List<double> csasData = new List<double>();
+                List<double> csobData = new List<double>();
+                List<double> kbData = new List<double>();
+                List<double> rbData = new List<double>();
+                List<List<double>> bankDataSell = new List<List<double>> { kbData, rbData, csasData, csobData};
+                List<List<double>> bankDataBuy = new List<List<double>> { new List<double>(), new List<double>(), new List<double>(), new List<double>() };
+
+                for (int d = 0; d < dates.Length; d++) {
+                    var date = dates[d];
+
+                    var cnb = listBank[0];
+
+                    var rateLists = cnb.getRateLists();
+                    ExchangeRate exchangeRate_cnb = null;
+
+                    foreach (RateList rateList in rateLists) {
+                        if (rateList.GetDate().Date == date.Date) {
+                            foreach (ExchangeRate er in rateList.getExchangeRates()) {
+                                if (er.currency == currency) {
+                                    exchangeRate_cnb = er;
+                                }
+                            }
+                        }
+                    }
+
+                    for (int i = 1; i < listBank.Count; i++) {
+                        var bankRates = listBank[i].getRateLists();
+                        ExchangeRate exchangeRate_other = null;
+
+                        foreach (RateList rateList in bankRates) {
+                            if (rateList.GetDate().Date == date.Date) {
+                                foreach (ExchangeRate er in rateList.getExchangeRates()) {
+                                    if (er.currency == currency) {
+                                        exchangeRate_other = er;
+                                    }
+                                }
+                            }
+                        }
+
+                        double sellDifference = 0;
+                        double buyDifference = 0;
+
+                        if (exchangeRate_other != null && exchangeRate_cnb != null) {
+                            buyDifference = (double)exchangeRate_cnb.buyRate - (double)exchangeRate_other.buyRate;
+                            sellDifference = (double)exchangeRate_other.sellRate - (double)exchangeRate_cnb.sellRate;
+                        }
+
+                        bankDataSell[i - 1].Add(sellDifference);
+                        bankDataBuy[i - 1].Add(buyDifference);
+                    }
+                }
+                Graph graph = new Graph(currency, dates, bankDataSell, bankDataBuy);
+                
+
+                graph.Show();
+            }
         }
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
@@ -120,11 +193,19 @@ namespace Semestralka
 
         private void lbVolba_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            foreach (ABank bank in listBank) {
+                bank.RateListsLoadAll(); //nacist ze vsech souboru
+            }
             dataGrid.Items.Clear();
             foreach (Object selecteditem in lbVolba.SelectedItems)
             {
                 string strItem = selecteditem as String;
-                List<MergeRates> data = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date)];
+                List<MergeRates> data;
+                try {
+                    data = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date)];
+                } catch (KeyNotFoundException error) {
+                    data = new List<MergeRates>();
+                }
 
                 dataGrid.Items.Add(new MergeRates(strItem)); // hlavicka mena
 

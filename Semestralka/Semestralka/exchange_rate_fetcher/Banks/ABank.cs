@@ -32,6 +32,9 @@ namespace sti_semestralka.exchange_rate_fetcher
 
         public void RateListsLoadAll() {
             rateLists = new List<RateList>();
+
+            Directory.CreateDirectory(exchangeRateListFolderPath);
+
             String[] fileNames = Directory.GetFiles(this.exchangeRateListFolderPath);
             String date;
             foreach (String fileName in fileNames) {
