@@ -16,12 +16,12 @@ namespace Semestralka.exchange_rate_fetcher
         public string prodej { get; set; }
         public string změna { get; set; } // proti predeslemu datu
 
-        public MergeRates()
+        public MergeRates(string mena)
         {
             this.banka = "";
             this.měna = "";
             this.množství = "";
-            this.nákup = "";
+            this.nákup = mena;
             this.prodej = "";
             this.změna = "";
         }
