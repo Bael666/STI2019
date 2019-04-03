@@ -1,3 +1,3 @@
 # STI2019
 C#  
-Aktualni verze: 1.0.2
+Aktualni verze: 1.0.3
