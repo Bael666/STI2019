@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Semestralka"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0*"/>
@@ -13,7 +13,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label Content="Rysaeva, Pilař, Pecina" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="141" Grid.ColumnSpan="3"/>
-        <Label Content="Verze" HorizontalAlignment="Left" Margin="285,10,0,0" VerticalAlignment="Top" Width="195" Grid.ColumnSpan="3"/>
+        <Label x:Name="lbVerze" Content="Verze" HorizontalAlignment="Left" Margin="285,10,0,0" VerticalAlignment="Top" Width="195" Grid.ColumnSpan="3"/>
         <Label Content="Volba měn" HorizontalAlignment="Left" Margin="10,97,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
         <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Height="360" Margin="164,50,0,0" VerticalAlignment="Top" Width="620" IsReadOnly="true" Grid.ColumnSpan="3"/>
         <Button x:Name="btnGraf" Content="Graf" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="120" Click="btnGraf_Click" Grid.ColumnSpan="3"/>

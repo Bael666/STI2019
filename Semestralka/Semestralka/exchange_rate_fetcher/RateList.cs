@@ -25,7 +25,7 @@ namespace sti_semestralka.exchange_rate_fetcher {
 
         public DateTime GetDate()
         {
-            return date;
+            return date.Date;
         }
 
         public void AddExchangeRate(ExchangeRate exchangeRate) {

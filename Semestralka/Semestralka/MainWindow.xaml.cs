@@ -4,7 +4,9 @@ using sti_semestralka.exchange_rate_fetcher.Banks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,6 +32,7 @@ namespace Semestralka
         public MainWindow()
         {
             InitializeComponent();
+            Title = "Verze aplikace: " + Version.versionLocal;
             DataGridTextColumn c1 = new DataGridTextColumn();
             c1.Header = "banka";
             c1.Binding = new Binding("banka");
@@ -63,7 +66,6 @@ namespace Semestralka
             Connection.CheckingConnection();
             BankInit();
         }
-
         public void BankInit()
         {
             listBank = new List<ABank>();
@@ -79,7 +81,7 @@ namespace Semestralka
 
             // naplneni list boxu
             lbVolba.SelectionMode = SelectionMode.Multiple;
-            
+
             //spusti se pred stazenim, hazi exception
             //foreach (var rate in listBank[0].getRateLists()[0].getExchangeRates()) {
             //    lbVolba.Items.Add(rate.currency);
@@ -88,10 +90,11 @@ namespace Semestralka
             String[] currencies = {"AUD", "BRL", "BGN", "CNY", "DKK", "EUR", "PHP", "HKD", "HRK", "INR", "IDR", "ISK", "ILS", "JPY", "ZAR", "CAD", "KRW",
                 "HUF", "MYR", "MXN", "XDR", "NOK", "NZD", "PLN", "RON", "RUB", "SGD", "SEK", "CHF", "THB", "TRY", "USD", "GBP" };
 
-            foreach (var currency in currencies) {
+            foreach (var currency in currencies)
+            {
                 lbVolba.Items.Add(currency);
             }
-            
+
 
             try
             {
@@ -108,18 +111,20 @@ namespace Semestralka
             DateTime[] dates = new DateTime[] { DateTime.Today.AddDays(-6), DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-4),
                 DateTime.Today.AddDays(-3), DateTime.Today.AddDays(-2), DateTime.Today.AddDays(-1), DateTime.Today};
 
-            
 
-            foreach (Object selecteditem in lbVolba.SelectedItems) {
+
+            foreach (Object selecteditem in lbVolba.SelectedItems)
+            {
                 string currency = selecteditem as String;
                 List<double> csasData = new List<double>();
                 List<double> csobData = new List<double>();
                 List<double> kbData = new List<double>();
                 List<double> rbData = new List<double>();
-                List<List<double>> bankDataSell = new List<List<double>> { kbData, rbData, csasData, csobData};
+                List<List<double>> bankDataSell = new List<List<double>> { kbData, rbData, csasData, csobData };
                 List<List<double>> bankDataBuy = new List<List<double>> { new List<double>(), new List<double>(), new List<double>(), new List<double>() };
 
-                for (int d = 0; d < dates.Length; d++) {
+                for (int d = 0; d < dates.Length; d++)
+                {
                     var date = dates[d];
 
                     var cnb = listBank[0];
@@ -127,24 +132,33 @@ namespace Semestralka
                     var rateLists = cnb.getRateLists();
                     ExchangeRate exchangeRate_cnb = null;
 
-                    foreach (RateList rateList in rateLists) {
-                        if (rateList.GetDate().Date == date.Date) {
-                            foreach (ExchangeRate er in rateList.getExchangeRates()) {
-                                if (er.currency == currency) {
+                    foreach (RateList rateList in rateLists)
+                    {
+                        if (rateList.GetDate().Date == date.Date)
+                        {
+                            foreach (ExchangeRate er in rateList.getExchangeRates())
+                            {
+                                if (er.currency == currency)
+                                {
                                     exchangeRate_cnb = er;
                                 }
                             }
                         }
                     }
 
-                    for (int i = 1; i < listBank.Count; i++) {
+                    for (int i = 1; i < listBank.Count; i++)
+                    {
                         var bankRates = listBank[i].getRateLists();
                         ExchangeRate exchangeRate_other = null;
 
-                        foreach (RateList rateList in bankRates) {
-                            if (rateList.GetDate().Date == date.Date) {
-                                foreach (ExchangeRate er in rateList.getExchangeRates()) {
-                                    if (er.currency == currency) {
+                        foreach (RateList rateList in bankRates)
+                        {
+                            if (rateList.GetDate().Date == date.Date)
+                            {
+                                foreach (ExchangeRate er in rateList.getExchangeRates())
+                                {
+                                    if (er.currency == currency)
+                                    {
                                         exchangeRate_other = er;
                                     }
                                 }
@@ -154,7 +168,8 @@ namespace Semestralka
                         double sellDifference = 0;
                         double buyDifference = 0;
 
-                        if (exchangeRate_other != null && exchangeRate_cnb != null) {
+                        if (exchangeRate_other != null && exchangeRate_cnb != null)
+                        {
                             buyDifference = (double)exchangeRate_cnb.buyRate - (double)exchangeRate_other.buyRate;
                             sellDifference = (double)exchangeRate_other.sellRate - (double)exchangeRate_cnb.sellRate;
                         }
@@ -164,7 +179,7 @@ namespace Semestralka
                     }
                 }
                 Graph graph = new Graph(currency, dates, bankDataSell, bankDataBuy);
-                
+
 
                 graph.Show();
             }
@@ -193,7 +208,8 @@ namespace Semestralka
 
         private void lbVolba_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (ABank bank in listBank) {
+            foreach (ABank bank in listBank)
+            {
                 bank.RateListsLoadAll(); //nacist ze vsech souboru
             }
             dataGrid.Items.Clear();
@@ -201,9 +217,12 @@ namespace Semestralka
             {
                 string strItem = selecteditem as String;
                 List<MergeRates> data;
-                try {
+                try
+                {
                     data = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date)];
-                } catch (KeyNotFoundException error) {
+                }
+                catch (KeyNotFoundException error)
+                {
                     data = new List<MergeRates>();
                 }
 
@@ -230,7 +249,7 @@ namespace Semestralka
                         }
                     }
                 }
-            }           
+            }
         }
     }
 }

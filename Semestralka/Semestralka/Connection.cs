@@ -37,9 +37,27 @@ namespace Semestralka
                     MainWindow win = (MainWindow)Application.Current.MainWindow;
                     win.lbStatusConnect.Content = (Connection.CheckConnection()) ? "Online" : "Offline";
                     win.lbStatusConnect.Foreground = win.lbStatusConnect.Content.Equals("Online") ? Brushes.Green : Brushes.Red;
+
+                    if(win.lbStatusConnect.Content.Equals("Online"))
+                    {
+                        Task check = Version.GetVersionFromServer();
+                        check.Wait();
+
+                        if (!Version.versionServer.Equals(Version.versionLocal))
+                        {
+                            win.lbVerze.Content = "Dostupná nová verze: " + Version.versionServer;
+                            win.lbVerze.Foreground = Brushes.Red;
+                        }
+                        else
+                        {
+                            win.lbVerze.Content = "Verze je aktuální";
+                            win.lbVerze.Foreground = Brushes.Green;
+                        }            
+                    }
+                        
                 }));
                 // Wait to repeat again.
-                Thread.Sleep(20);
+                Thread.Sleep(10000);
             }
         }
 
