@@ -13,12 +13,20 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label Content="Rysaeva, Pilař, Pecina" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="141" Grid.ColumnSpan="3"/>
-        <Label x:Name="lbVerze" Content="Verze" HorizontalAlignment="Left" Margin="285,10,0,0" VerticalAlignment="Top" Width="195" Grid.ColumnSpan="3"/>
         <Label Content="Volba měn" HorizontalAlignment="Left" Margin="10,97,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
         <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Height="360" Margin="164,50,0,0" VerticalAlignment="Top" Width="620" IsReadOnly="true" Grid.ColumnSpan="3"/>
         <Button x:Name="btnGraf" Content="Graf" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="120" Click="btnGraf_Click" Grid.ColumnSpan="3"/>
         <Button x:Name="btnExport" Content="Export" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top" Width="120" Click="btnExport_Click" Grid.ColumnSpan="3"/>
         <Label x:Name="lbStatusConnect" Content="Online/Offline" HorizontalAlignment="Left" Margin="600,10,0,0" VerticalAlignment="Top" Width="166" Grid.ColumnSpan="3"/>
         <ListBox x:Name="lbVolba" HorizontalAlignment="Left" Height="282" Margin="10,128,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="lbVolba_SelectionChanged" Grid.ColumnSpan="3"/>
+        <TextBox x:Name="tbVerze" Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="32" Margin="164,13,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="413">
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                <Setter Property="IsReadOnly" Value="True" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+            </Style>
+            </TextBox.Style>
+        </TextBox>
     </Grid>
 </Window>

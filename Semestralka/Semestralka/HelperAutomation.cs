@@ -22,6 +22,12 @@ namespace Semestralka
                     {
                         // transformace
                         MergeRates mr = new MergeRates(listItem.name, rate);
+                        string tmp = rateItem.GetDate().ToString();
+                        if (rateItem.GetDate().ToString().Contains("07.04.2019") && mr.měna.Equals("AUD"))
+                        {
+                            { }
+                        }
+
                         if (!dictMergeRates.ContainsKey(new Tuple<string, DateTime>(rate.currency, rateItem.GetDate())))
                         {
                             dictMergeRates.Add(new Tuple<string, DateTime>(rate.currency, rateItem.GetDate()), new List<MergeRates> { mr });
