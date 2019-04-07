@@ -65,6 +65,7 @@ namespace Semestralka
             dataGrid.Columns.Add(c5);
             Connection.CheckingConnection();
             BankInit();
+            Thread.Sleep(20000);
         }
         public void BankInit()
         {
@@ -216,7 +217,7 @@ namespace Semestralka
             foreach (Object selecteditem in lbVolba.SelectedItems)
             {
                 string strItem = selecteditem as String;
-                List<MergeRates> data;
+                List<MergeRates> data = new List<MergeRates>();
                 try
                 {
                     data = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date)];

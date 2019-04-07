@@ -45,13 +45,13 @@ namespace Semestralka
 
                         if (!Version.versionServer.Equals(Version.versionLocal))
                         {
-                            win.lbVerze.Content = "Dostupná nová verze: " + Version.versionServer;
-                            win.lbVerze.Foreground = Brushes.Red;
+                            win.tbVerze.Text = "Dostupná nová verze: " + Version.versionServer + "\n" + Version.versionLink;
+                            win.tbVerze.Foreground = Brushes.Red;
                         }
                         else
                         {
-                            win.lbVerze.Content = "Verze je aktuální";
-                            win.lbVerze.Foreground = Brushes.Green;
+                            win.tbVerze.Text = "Verze je aktuální";
+                            win.tbVerze.Foreground = Brushes.Green;
                         }            
                     }
                         

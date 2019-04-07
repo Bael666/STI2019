@@ -11,7 +11,8 @@ namespace Semestralka
     public class Version
     {
         public static string versionLocal = "1.0.1";
-        public static string versionServer = "";       
+        public static string versionServer = "";
+        public static string versionLink = "";
         public static async Task GetVersionFromServer()
         {
             string url = "https://github.com/Bael666/STI2019/blob/master/README.md";
@@ -31,6 +32,13 @@ namespace Semestralka
                 if (match.Success)
                 {
                     versionServer = match.Groups[1].Value;
+                }
+
+                regex = new Regex("Link: <a href=\"(.*)\" rel");
+                match = regex.Match(responseData);
+                if (match.Success)
+                {
+                    versionLink = match.Groups[1].Value;
                 }
             }
         }

@@ -32,6 +32,10 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         public override async Task DownloadRateListAsync() {
             String date = DateTimeParser.DateToUrlCSOB(DateTime.Now);
 
+            if (rateLists.Any(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())))
+            {
+                rateLists.Remove(rateLists.Where(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())).First());
+            }
             RateList rateList = new RateList(DateTime.Now, exchangeRateListFolderPath);
             String responseData;
             using (var htttpClient = new HttpClient()) {
