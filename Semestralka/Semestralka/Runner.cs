@@ -61,16 +61,22 @@ namespace Semestralka
             //Task.Run(() => CheckingRepositoryPeriodicAsync(OnTick, dueTime, interval, cts.Token, getter).Wait());
             //CancellationToken.None
             //CheckingConnectionAsync(OnTick, dueTime, interval, CancellationToken.None);
-
-            // stazeni poslednich dat
-            foreach (ABank bank in listBank)
+            Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                Task download = bank.DownloadRateListAsync();
-                download.Wait();
-            }
+                MainWindow win = (MainWindow)Application.Current.MainWindow;
+                if (win.lbStatusConnect.Content != "Offline")
+                {
+                    // stazeni poslednich dat
+                    foreach (ABank bank in listBank)
+                    {
+                        Task download = bank.DownloadRateListAsync();
+                        download.Wait();
+                    }
 
-            HelperAutomation.TransformIntoDict(listBank, dictMergeRates);
-            HelperAutomation.CountDifference(dictMergeRates);
+                    HelperAutomation.TransformIntoDict(listBank, dictMergeRates);
+                    HelperAutomation.CountDifference(dictMergeRates);
+                }
+            }));
         }
     }
 }

@@ -45,17 +45,17 @@ namespace Semestralka
             //dataGrid.Columns.Add(c2);
             DataGridTextColumn c2 = new DataGridTextColumn();
             c2.Header = "množství";
-            c2.Width = 110;
+            c2.Width = 70;
             c2.Binding = new Binding("množství");
             dataGrid.Columns.Add(c2);
             DataGridTextColumn c3 = new DataGridTextColumn();
             c3.Header = "nákup";
-            c3.Width = 110;
+            c3.Width = 90;
             c3.Binding = new Binding("nákup");
             dataGrid.Columns.Add(c3);
             DataGridTextColumn c4 = new DataGridTextColumn();
             c4.Header = "prodej";
-            c4.Width = 110;
+            c4.Width = 90;
             c4.Binding = new Binding("prodej");
             dataGrid.Columns.Add(c4);
             DataGridTextColumn c5 = new DataGridTextColumn();
@@ -63,6 +63,12 @@ namespace Semestralka
             c5.Width = 110;
             c5.Binding = new Binding("změna");
             dataGrid.Columns.Add(c5);
+            DataGridTextColumn c6 = new DataGridTextColumn();
+            c6.Header = "doporučení";
+            c6.Width = 90;
+            c6.Binding = new Binding("doporučení");
+            dataGrid.Columns.Add(c6);
+
             Connection.CheckingConnection();
             BankInit();
             Thread.Sleep(20000);
@@ -217,39 +223,73 @@ namespace Semestralka
             foreach (Object selecteditem in lbVolba.SelectedItems)
             {
                 string strItem = selecteditem as String;
-                List<MergeRates> data = new List<MergeRates>();
+                List<MergeRates> dataToday = new List<MergeRates>();
+                List<MergeRates> dataYesterday = new List<MergeRates>();
                 try
                 {
-                    data = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date)];
+                    dataYesterday = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date.AddDays(-1))];
+                    dataToday = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date)];
                 }
                 catch (KeyNotFoundException error)
                 {
-                    data = new List<MergeRates>();
+                    dataToday = new List<MergeRates>();
                 }
+
+                List<double> differenceSell = new List<double>();
+                List<double> differenceBuy = new List<double>();
+                int iSell = 0;
+                int iBuy = 0;
+                double bestSell = 0;
+                double bestBuy = 100000;
+                for (int i = 0; i < dataYesterday.Count; i++)
+                {
+                    if (Double.Parse(dataToday[i].nákup) < bestBuy)
+                    {
+                        bestBuy = Double.Parse(dataToday[i].nákup);
+                        iBuy = i;
+                    }
+                    if (Double.Parse(dataToday[i].prodej) > bestSell)
+                    {
+                        bestSell = Double.Parse(dataToday[i].prodej);
+                        iSell = i;
+                    }
+                    differenceBuy.Add(Double.Parse(dataYesterday[i].nákup) - Double.Parse(dataToday[i].nákup));
+                    differenceSell.Add(Double.Parse(dataYesterday[i].prodej) - Double.Parse(dataToday[i].prodej));
+                }
+
+                if (differenceBuy[iBuy] > 0 && !dataToday[iBuy].banka.Equals("CNB"))
+                {
+                    dataToday[iBuy].doporučení = "nakup";
+                }
+                if (differenceBuy[iSell] < 0 && !dataToday[iSell].banka.Equals("CNB"))
+                {
+                    dataToday[iSell].doporučení = "prodej";
+                }
+
 
                 dataGrid.Items.Add(new MergeRates(strItem)); // hlavicka mena
 
-                foreach (var item in data)
+                foreach (var item in dataToday)
                 {
                     dataGrid.Items.Add(item);
                 }
 
-                // obarveni hlavicek - nefunkcni nevim proc 
-                foreach (MergeRates item in dataGrid.Items.OfType<MergeRates>())
-                {
-                    var row = dataGrid.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
-                    if (item.banka == "")
-                    {
-                        try
-                        {
-                            row.Background = Brushes.Red;
-                        }
-                        catch
-                        {
-                            //nevim proc je row nekdy null
-                        }
-                    }
-                }
+                //// obarveni hlavicek - nefunkcni nevim proc 
+                //foreach (MergeRates item in dataGrid.Items.OfType<MergeRates>())
+                //{
+                //    var row = dataGrid.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
+                //    if (item.banka == "")
+                //    {
+                //        try
+                //        {
+                //            row.Background = Brushes.Red;
+                //        }
+                //        catch
+                //        {
+                //            //nevim proc je row nekdy null
+                //        }
+                //    }
+                //}
             }
         }
     }
