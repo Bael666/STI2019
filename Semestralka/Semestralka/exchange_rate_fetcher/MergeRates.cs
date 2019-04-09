@@ -15,6 +15,7 @@ namespace Semestralka.exchange_rate_fetcher
         public string nákup { get; set; }
         public string prodej { get; set; }
         public string změna { get; set; } // proti predeslemu datu
+        public string doporučení { get; set; }
 
         public MergeRates(string mena)
         {
@@ -24,6 +25,7 @@ namespace Semestralka.exchange_rate_fetcher
             this.nákup = mena;
             this.prodej = "";
             this.změna = "";
+            this.doporučení = "";
         }
         public MergeRates(string banka, string měna, string množství, string nákup, string prodej)
         {
@@ -33,6 +35,7 @@ namespace Semestralka.exchange_rate_fetcher
             this.nákup = nákup;
             this.prodej = prodej;
             this.změna = "0";
+            this.doporučení = "";
         }
 
         public MergeRates(string bank, ExchangeRate exchangeRate)
@@ -43,6 +46,7 @@ namespace Semestralka.exchange_rate_fetcher
             this.nákup = exchangeRate.buyRate.ToString();
             this.prodej = exchangeRate.sellRate.ToString();
             this.změna = "0";
+            this.doporučení = "";
         }
     }
 }
