@@ -28,7 +28,7 @@ namespace Semestralka
                     //Add the Content sheet
                     int rowIndex = 1;
                     int columnIndex = 1;
-                    List<string> list_headerArea = new List<string> { "banka", "množství", "nakup", "prodej", "změna" };
+                    List<string> list_headerArea = new List<string> { "banka", "množství", "nakup", "prodej", "doporučení" };
                     ExcelWorksheet ws;
 
                     ws = pck.Workbook.Worksheets.Add(name);
@@ -52,7 +52,7 @@ namespace Semestralka
                         columnIndex++;
                         ws.Cells[rowIndex, columnIndex].Value = file.prodej;
                         columnIndex++;
-                        ws.Cells[rowIndex, columnIndex].Value = file.změna;
+                        ws.Cells[rowIndex, columnIndex].Value = file.doporučení;
                         columnIndex++;
 
                         rowIndex++; columnIndex = 1;
