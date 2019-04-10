@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Semestralka"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" ResizeMode="NoResize">
+        Title="MainWindow" Height="649.2" Width="795.2" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0*"/>
@@ -13,20 +13,21 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label Content="Rysaeva, Pilař, Pecina" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="141" Grid.ColumnSpan="3"/>
-        <Label Content="Volba měn" HorizontalAlignment="Left" Margin="10,97,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
-        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Height="360" Margin="164,50,0,0" VerticalAlignment="Top" Width="620" IsReadOnly="true" Grid.ColumnSpan="3"/>
+        <Label Content="Volba měn" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
+        <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Height="560" Margin="164,50,0,0" VerticalAlignment="Top" Width="620" IsReadOnly="true" Grid.ColumnSpan="3"/>
         <Button x:Name="btnGraf" Content="Graf" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="120" Click="btnGraf_Click" Grid.ColumnSpan="3"/>
         <Button x:Name="btnExport" Content="Export" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top" Width="120" Click="btnExport_Click" Grid.ColumnSpan="3"/>
         <Label x:Name="lbStatusConnect" Content="Online/Offline" HorizontalAlignment="Left" Margin="600,10,0,0" VerticalAlignment="Top" Width="166" Grid.ColumnSpan="3"/>
-        <ListBox x:Name="lbVolba" HorizontalAlignment="Left" Height="282" Margin="10,128,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="lbVolba_SelectionChanged" Grid.ColumnSpan="3"/>
+        <ListBox x:Name="lbVolba" HorizontalAlignment="Left" Height="422" Margin="10,188,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="lbVolba_SelectionChanged" Grid.ColumnSpan="3"/>
         <TextBox x:Name="tbVerze" Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="32" Margin="164,13,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="413">
             <TextBox.Style>
                 <Style TargetType="TextBox">
-                <Setter Property="IsReadOnly" Value="True" />
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="TextWrapping" Value="Wrap" />
-            </Style>
+                    <Setter Property="IsReadOnly" Value="True" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                </Style>
             </TextBox.Style>
         </TextBox>
+        <Button x:Name="btnRefresh" Grid.ColumnSpan="3" Content="Refresh table" HorizontalAlignment="Left" Margin="10,97,0,0" VerticalAlignment="Top" Width="120" Click="btnRefresh_Click"/>
     </Grid>
 </Window>

@@ -58,11 +58,11 @@ namespace Semestralka
             c4.Width = 90;
             c4.Binding = new Binding("prodej");
             dataGrid.Columns.Add(c4);
-            DataGridTextColumn c5 = new DataGridTextColumn();
-            c5.Header = "změna";
-            c5.Width = 110;
-            c5.Binding = new Binding("změna");
-            dataGrid.Columns.Add(c5);
+            //DataGridTextColumn c5 = new DataGridTextColumn();
+            //c5.Header = "změna";
+            //c5.Width = 110;
+            //c5.Binding = new Binding("změna");
+            //dataGrid.Columns.Add(c5);
             DataGridTextColumn c6 = new DataGridTextColumn();
             c6.Header = "doporučení";
             c6.Width = 90;
@@ -291,6 +291,13 @@ namespace Semestralka
                 //    }
                 //}
             }
+        }
+
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+
+
+
         }
     }
 }
