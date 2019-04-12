@@ -115,8 +115,17 @@ namespace Semestralka
 
         private void btnGraf_Click(object sender, RoutedEventArgs e)
         {
-            DateTime[] dates = new DateTime[] { DateTime.Today.AddDays(-6), DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-4),
+            DateTime[] week = new DateTime[] { DateTime.Today.AddDays(-6), DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-4),
                 DateTime.Today.AddDays(-3), DateTime.Today.AddDays(-2), DateTime.Today.AddDays(-1), DateTime.Today};
+
+            DateTime[] month = new DateTime[30];
+
+            for (int i = 0; i < month.Length; i++) {
+                month[i] = DateTime.Today.AddDays(-i);
+            }
+            Array.Reverse(month);
+
+            DateTime[] dates = month;
 
 
 
@@ -213,64 +222,95 @@ namespace Semestralka
             }
         }
 
-        private void lbVolba_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            foreach (ABank bank in listBank)
-            {
+        private void lbVolba_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            foreach (ABank bank in listBank) {
                 bank.RateListsLoadAll(); //nacist ze vsech souboru
             }
             dataGrid.Items.Clear();
-            foreach (Object selecteditem in lbVolba.SelectedItems)
-            {
+            foreach (Object selecteditem in lbVolba.SelectedItems) {
                 string strItem = selecteditem as String;
                 List<MergeRates> dataToday = new List<MergeRates>();
                 List<MergeRates> dataYesterday = new List<MergeRates>();
-                try
-                {
+                try {
                     dataYesterday = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date.AddDays(-1))];
                     dataToday = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date)];
-                }
-                catch (KeyNotFoundException error)
-                {
+                } catch (KeyNotFoundException error) {
                     dataToday = new List<MergeRates>();
                 }
 
-                List<double> differenceSell = new List<double>();
-                List<double> differenceBuy = new List<double>();
-                int iSell = 0;
-                int iBuy = 0;
-                double bestSell = 0;
-                double bestBuy = 100000;
-                for (int i = 0; i < dataYesterday.Count; i++)
-                {
-                    if (Double.Parse(dataToday[i].nákup) < bestBuy)
-                    {
-                        bestBuy = Double.Parse(dataToday[i].nákup);
-                        iBuy = i;
+                //List<double> differenceSell = new List<double>();
+                //List<double> differenceBuy = new List<double>();
+                //int iSell = 0;
+                //int iBuy = 0;
+                //double bestSell = 0;
+                //double bestBuy = 100000;
+                //for (int i = 0; i < dataYesterday.Count; i++) {
+                //    if (Double.Parse(dataToday[i].nákup) < bestBuy) {
+                //        bestBuy = Double.Parse(dataToday[i].nákup);
+                //        iBuy = i;
+                //    }
+                //    if (Double.Parse(dataToday[i].prodej) > bestSell) {
+                //        bestSell = Double.Parse(dataToday[i].prodej);
+                //        iSell = i;
+                //    }
+                //    differenceBuy.Add(Double.Parse(dataYesterday[i].nákup) - Double.Parse(dataToday[i].nákup));
+                //    differenceSell.Add(Double.Parse(dataYesterday[i].prodej) - Double.Parse(dataToday[i].prodej));
+                //}
+
+                //if (differenceBuy[iBuy] > 0 && !dataToday[iBuy].banka.Equals("CNB")) {
+                //    dataToday[iBuy].doporučení = "nakup";
+                //}
+                //if (differenceBuy[iSell] < 0 && !dataToday[iSell].banka.Equals("CNB")) {
+                //    dataToday[iSell].doporučení = "prodej";
+                //}
+
+                var cnb_zmena = float.Parse(dataToday.SingleOrDefault(cnb => cnb.banka.ToUpper().Equals("CNB")).nákup)
+                    - float.Parse(dataYesterday.SingleOrDefault(cnb => cnb.banka.ToUpper().Equals("CNB")).nákup);
+
+                String doporuceni = "Cena se nezmenila";
+                int chosen = -1;
+
+                if (cnb_zmena > 0) {
+                    doporuceni = "Prodavej";
+                    float highestBuyingBank = 0;
+                    for (int i = 0; i < dataToday.Count; i++) {
+                        var item = dataToday[i];
+                        if (!item.banka.ToUpper().Equals("CNB")) {
+                            var buyingBank = float.Parse(item.nákup);
+
+                            if (buyingBank > highestBuyingBank) {
+                                highestBuyingBank = buyingBank;
+                                chosen = i;
+                            }
+                        }
                     }
-                    if (Double.Parse(dataToday[i].prodej) > bestSell)
-                    {
-                        bestSell = Double.Parse(dataToday[i].prodej);
-                        iSell = i;
+                } else if (cnb_zmena < 0) {
+                    doporuceni = "Nakupuj";
+                    float lowestSellingBank = float.MaxValue;
+                    for (int i = 0; i < dataToday.Count; i++) {
+                        var item = dataToday[i];
+                        if (!item.banka.ToUpper().Equals("CNB")) {
+                            var sellingBank = float.Parse(item.prodej);
+
+                            if (sellingBank < lowestSellingBank) {
+                                lowestSellingBank = sellingBank;
+                                chosen = i;
+                            }
+                        }
                     }
-                    differenceBuy.Add(Double.Parse(dataYesterday[i].nákup) - Double.Parse(dataToday[i].nákup));
-                    differenceSell.Add(Double.Parse(dataYesterday[i].prodej) - Double.Parse(dataToday[i].prodej));
                 }
 
-                if (differenceBuy[iBuy] > 0 && !dataToday[iBuy].banka.Equals("CNB"))
-                {
-                    dataToday[iBuy].doporučení = "nakup";
+                if (chosen >= 0) {
+                    dataToday[chosen].doporučení = doporuceni;
                 }
-                if (differenceBuy[iSell] < 0 && !dataToday[iSell].banka.Equals("CNB"))
-                {
-                    dataToday[iSell].doporučení = "prodej";
-                }
+
+
+                Console.WriteLine(cnb_zmena);
 
 
                 dataGrid.Items.Add(new MergeRates(strItem)); // hlavicka mena
 
-                foreach (var item in dataToday)
-                {
+                foreach (var item in dataToday) {
                     dataGrid.Items.Add(item);
                 }
 
@@ -295,9 +335,7 @@ namespace Semestralka
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
-
-
-
+            
         }
     }
 }
