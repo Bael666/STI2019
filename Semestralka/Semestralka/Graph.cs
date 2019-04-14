@@ -41,13 +41,24 @@ namespace Semestralka {
         }
 
         private void addGraph(String title, DateTime[] dates, List<List<double>> bankDataSell, List<List<double>> bankDataBuy) {
-            
             for (int b = 0; b < 2; b++) {
                 List<List<double>> bankData;
+
                 Chart chart = new Chart {
                     Width = panel.Width - 50,
                     BackColor = Color.LightGray
                 };
+
+                ChartArea area = new ChartArea();
+                area.Name = "ChrtArea";
+
+                chart.ChartAreas.Add(area);
+
+                Legend legend = new Legend();
+                legend.Name = "Legend";
+
+                chart.Legends.Add(legend);
+
 
                 String[] chartTitle = { title + " - Prodej", title + " - Nákup" };
 
@@ -57,10 +68,10 @@ namespace Semestralka {
                     bankData = bankDataBuy;
                 }
 
-                chart.Titles.Add(chartTitle[b]);
-
-
-                //chart.Series.Clear();
+                Title chartingTitle = chart.Titles.Add(chartTitle[b]);
+                chartingTitle.Font = new System.Drawing.Font("Arial", 16, FontStyle.Bold);
+                
+                chart.Series.Clear();
                                     
                 String[] bankNames = { "Komerční banka", "Raiffeisenbank", "Česká spořitelna", "Československá obchodní banka"};
                 Color[] colors = { System.Drawing.Color.Blue, System.Drawing.Color.Green, System.Drawing.Color.Red, System.Drawing.Color.Black};
