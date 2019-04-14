@@ -32,12 +32,26 @@ namespace Semestralka {
             this.bankDataSell = bankDataSell;
             this.bankDataBuy = bankDataBuy;
 
+            refreshGraphs();
+            
+        }
+
+        private void refreshGraphs() {
+            foreach (Control chart in panel.Controls) {
+                panel.Controls.Remove(chart);
+                chart.Dispose();
+            }
+
+            panel.Controls.Clear();
 
             for (int i = 0; i < title.Count; i++) {
 
                 addGraph(title[i], dates[i], bankDataSell[i], bankDataBuy[i]);
 
             }
+
+            Refresh();
+
         }
 
         private void addGraph(String title, DateTime[] dates, List<List<double>> bankDataSell, List<List<double>> bankDataBuy) {
@@ -111,6 +125,20 @@ namespace Semestralka {
 
             }
             
+        }
+
+        private void buttonViewType_Click(object sender, EventArgs e) {
+            String weekTitle = "Zobrazit týden";
+            String monthTitle = "Zobrazit měsíc";
+
+            if (!week) {
+                ((Button)sender).Text = monthTitle;
+                week = true;
+            } else {
+                ((Button)sender).Text = weekTitle;
+                week = false;
+            }
+            refreshGraphs();
         }
     }
 }

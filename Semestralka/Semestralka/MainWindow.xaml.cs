@@ -116,6 +116,12 @@ namespace Semestralka
 
         private void btnGraf_Click(object sender, RoutedEventArgs e)
         {
+            if (dataGrid.Items.Count == 0) {
+                System.Windows.MessageBox.Show("No data available");
+                return;
+            }
+
+
             DateTime[] week = new DateTime[] { DateTime.Today.AddDays(-6), DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-4),
                 DateTime.Today.AddDays(-3), DateTime.Today.AddDays(-2), DateTime.Today.AddDays(-1), DateTime.Today};
 
