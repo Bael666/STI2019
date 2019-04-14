@@ -28,6 +28,7 @@ namespace Semestralka
     {
         private static Dictionary<Tuple<string, DateTime>, List<MergeRates>> dictMergeRates = new Dictionary<Tuple<string, DateTime>, List<MergeRates>>();
         List<ABank> listBank;
+        Graph graph;
 
         public MainWindow()
         {
@@ -128,6 +129,10 @@ namespace Semestralka
             DateTime[] dates = month;
 
 
+            var currencyList = new List<String>();
+            var datesList = new List<DateTime[]>();
+            var bankDataSellList = new List<List<List<double>>>();
+            var bankDataBuyList = new List<List<List<double>>>();
 
             foreach (Object selecteditem in lbVolba.SelectedItems)
             {
@@ -194,11 +199,17 @@ namespace Semestralka
                         bankDataBuy[i - 1].Add(buyDifference);
                     }
                 }
-                Graph graph = new Graph(currency, dates, bankDataSell, bankDataBuy);
-
-
-                graph.Show();
+                currencyList.Add(currency);
+                datesList.Add(dates);
+                bankDataSellList.Add(bankDataSell);
+                bankDataBuyList.Add(bankDataBuy);
             }
+
+            if (graph != null) {
+                graph.Close();
+            }
+            graph = new Graph(currencyList, datesList, bankDataSellList, bankDataBuyList);
+            graph.Show();
         }
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
@@ -263,9 +274,18 @@ namespace Semestralka
                 //if (differenceBuy[iSell] < 0 && !dataToday[iSell].banka.Equals("CNB")) {
                 //    dataToday[iSell].doporučení = "prodej";
                 //}
+                var hlavicka = new MergeRates(strItem);
+                dataGrid.Items.Add(hlavicka); // hlavicka mena
+                dataGrid.Columns[dataGrid.Columns.Count-1].MinWidth = 120;
 
-                var cnb_zmena = float.Parse(dataToday.SingleOrDefault(cnb => cnb.banka.ToUpper().Equals("CNB")).nákup)
-                    - float.Parse(dataYesterday.SingleOrDefault(cnb => cnb.banka.ToUpper().Equals("CNB")).nákup);
+                float cnb_zmena = 0;
+                try {
+                    cnb_zmena = float.Parse(dataToday.SingleOrDefault(cnb => cnb.banka.ToUpper().Equals("CNB")).nákup)
+                        - float.Parse(dataYesterday.SingleOrDefault(cnb => cnb.banka.ToUpper().Equals("CNB")).nákup);
+                } catch (NullReferenceException err) {
+                    // chybi vcerejsi data
+                    hlavicka.doporučení = "Chybi vcerejsi data";
+                }
 
                 String doporuceni = "Cena se nezmenila";
                 int chosen = -1;
@@ -308,7 +328,7 @@ namespace Semestralka
                 Console.WriteLine(cnb_zmena);
 
 
-                dataGrid.Items.Add(new MergeRates(strItem)); // hlavicka mena
+                
 
                 foreach (var item in dataToday) {
                     dataGrid.Items.Add(item);

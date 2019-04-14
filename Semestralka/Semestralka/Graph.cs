@@ -14,33 +14,53 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Semestralka {
     public partial class Graph : Form {
-        
 
-        public Graph(String title, DateTime[] dates, List<List<double>> bankDataSell, List<List<double>> bankDataBuy) {
+
+        List<String> title;
+        List<DateTime[]> dates;
+        List<List<List<double>>> bankDataSell;
+        List<List<List<double>>> bankDataBuy;
+        Boolean week = true;
+        FlowLayoutPanel panel;
+
+        public Graph(List<String> title, List<DateTime[]> dates, List<List<List<double>>> bankDataSell, List<List<List<double>>> bankDataBuy) {
             InitializeComponent();
-            init(title, dates, bankDataSell, bankDataBuy);
             this.Text = "Vývoj ceny vůči České národní bance";
-            
+            this.panel = flowLayoutPanel1;
+            this.title = title;
+            this.dates = dates;
+            this.bankDataSell = bankDataSell;
+            this.bankDataBuy = bankDataBuy;
+
+
+            for (int i = 0; i < title.Count; i++) {
+
+                addGraph(title[i], dates[i], bankDataSell[i], bankDataBuy[i]);
+
+            }
         }
 
-        private void init(String title, DateTime[] dates, List<List<double>> bankDataSell, List<List<double>> bankDataBuy) {
+        private void addGraph(String title, DateTime[] dates, List<List<double>> bankDataSell, List<List<double>> bankDataBuy) {
+            
             for (int b = 0; b < 2; b++) {
                 List<List<double>> bankData;
-                Chart chart;
+                Chart chart = new Chart {
+                    Width = panel.Width - 50,
+                    BackColor = Color.LightGray
+                };
+
                 String[] chartTitle = { title + " - Prodej", title + " - Nákup" };
 
                 if (b == 0) {
                     bankData = bankDataSell;
-                    chart = chart1;
                 } else {
                     bankData = bankDataBuy;
-                    chart = chart2;
                 }
 
                 chart.Titles.Add(chartTitle[b]);
 
 
-                chart.Series.Clear();
+                //chart.Series.Clear();
                                     
                 String[] bankNames = { "Komerční banka", "Raiffeisenbank", "Česká spořitelna", "Československá obchodní banka"};
                 Color[] colors = { System.Drawing.Color.Blue, System.Drawing.Color.Green, System.Drawing.Color.Red, System.Drawing.Color.Black};
@@ -60,8 +80,13 @@ namespace Semestralka {
                         ChartType = SeriesChartType.Column
                     };
 
-                    for (int j = 0; j < dates.Length; j++) {
+                    int j = 0;
+                    if (week) {
+                        j = dates.Length - 7;
+                    }
+                    for (; j < dates.Length; j++) {
                         series.Points.AddXY(dates[j], data[j]);
+                        Console.WriteLine("{2} == date: {0}, data: {1}", dates[j], data[j], name);
                     }
 
 
@@ -69,7 +94,10 @@ namespace Semestralka {
                     
 
                 }
+                
                 chart.Invalidate();
+                panel.Controls.Add(chart);
+
             }
             
         }
