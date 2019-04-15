@@ -69,8 +69,12 @@ namespace Semestralka
                     // stazeni poslednich dat
                     foreach (ABank bank in listBank)
                     {
-                        Task download = bank.DownloadRateListAsync();
-                        download.Wait();
+                        try {
+                            Task download = bank.DownloadRateListAsync(DateTime.Now);
+                            download.Wait();
+                        } catch (Exception e) {
+                            // download failed
+                        }
                     }
 
                     HelperAutomation.TransformIntoDict(listBank, dictMergeRates);
