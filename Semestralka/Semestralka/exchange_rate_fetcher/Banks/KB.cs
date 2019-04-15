@@ -61,9 +61,8 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
             foreach (var rate in exchangeRates) {
                 String currency = rate["currencyISO"].ToString();
                 int unit = int.Parse(rate["currencyUnit"].ToString());
-                float buyRate = float.Parse(rate["noncashBuy"].ToString().ToString().Replace(',', '.'));
-                float sellRate = float.Parse(rate["noncashSell"].ToString().ToString().Replace(',', '.'));
-
+                float buyRate = float.Parse(rate["noncashBuy"].ToString());
+                float sellRate = float.Parse(rate["noncashSell"].ToString());
 
                 ExchangeRate exchangeRate = new ExchangeRate(currency, unit, buyRate, sellRate);
                 rateList.AddExchangeRate(exchangeRate);

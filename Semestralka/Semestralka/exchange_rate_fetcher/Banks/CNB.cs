@@ -55,7 +55,7 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
                 String[] textDataArray = textData.Split('\n');
                 foreach (var line in textDataArray) {
                     var exchangeRateData = line.Split('|');
-                    var exchangeRate = new ExchangeRate(exchangeRateData[3], int.Parse(exchangeRateData[2]), float.Parse(exchangeRateData[4].ToString().Replace(',', '.')), float.Parse(exchangeRateData[4].ToString().Replace(',', '.')));
+                    var exchangeRate = new ExchangeRate(exchangeRateData[3], int.Parse(exchangeRateData[2]), float.Parse(exchangeRateData[4]), float.Parse(exchangeRateData[4]));
                     rateList.AddExchangeRate(exchangeRate);
                 }
 

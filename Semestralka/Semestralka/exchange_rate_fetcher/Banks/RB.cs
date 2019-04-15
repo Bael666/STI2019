@@ -91,13 +91,12 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
                 foreach (XmlNode currencyNode in buyNode.ChildNodes) {
                     string currency = currencyNode.Attributes["name"].Value.ToString();
                     int unit = int.Parse(currencyNode.Attributes["quota"].Value.ToString());
-                    float buyRate = float.Parse(currencyNode.Attributes["rate"].Value.ToString().Replace(',','.'));
-                    float sellRate = float.Parse(saleNode.SelectSingleNode("currency[@name='" + currency + "']/@rate").Value.ToString().Replace(',', '.'));
+                    float buyRate = float.Parse(currencyNode.Attributes["rate"].Value.ToString().Replace('.',','));
+                    float sellRate = float.Parse(saleNode.SelectSingleNode("currency[@name='" + currency + "']/@rate").Value.ToString().Replace('.', ','));
 
                     var exchangeRate = new ExchangeRate(currency, unit, buyRate, sellRate);
 
                     rateList.AddExchangeRate(exchangeRate);
-
                 }
 
                 rateList.SaveExchangeRates();

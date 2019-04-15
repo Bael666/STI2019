@@ -54,8 +54,8 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
                     string currency = country.Attributes["ID"].Value;
                     int unit = int.Parse(country.Attributes["quota"].Value);
                     XmlNode FXcashless = country.SelectSingleNode("FXcashless");
-                    float buyRate = float.Parse(FXcashless.Attributes["Buy"].Value.ToString().Replace(',', '.'));
-                    float sellRate = float.Parse(FXcashless.Attributes["Sale"].Value.ToString().Replace(',', '.'));
+                    float buyRate = float.Parse(FXcashless.Attributes["Buy"].Value.ToString().Replace('.', ','));
+                    float sellRate = float.Parse(FXcashless.Attributes["Sale"].Value.ToString().Replace('.', ','));
 
                     var exchangeRate = new ExchangeRate(currency, unit, buyRate, sellRate);
 
