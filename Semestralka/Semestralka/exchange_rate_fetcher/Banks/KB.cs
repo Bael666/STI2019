@@ -31,14 +31,14 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         public KB() : base(BANK_NAME) {
         }
 
-        public override async Task DownloadRateListAsync(DateTime now) {
-            String date = DateTimeParser.DateToUrlKB(now);
+        public override async Task DownloadRateListAsync() {
+            String date = DateTimeParser.DateToUrlKB(DateTime.Now);
 
             if (rateLists.Any(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())))
             {
                 rateLists.Remove(rateLists.Where(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())).First());
             }
-            RateList rateList = new RateList(now, exchangeRateListFolderPath);
+            RateList rateList = new RateList(DateTime.Now, exchangeRateListFolderPath);
             String responseData;
 
             using (var htttpClient = new HttpClient()) {
@@ -61,9 +61,8 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
             foreach (var rate in exchangeRates) {
                 String currency = rate["currencyISO"].ToString();
                 int unit = int.Parse(rate["currencyUnit"].ToString());
-                float buyRate = float.Parse(rate["noncashBuy"].ToString().ToString().Replace(',', '.'));
-                float sellRate = float.Parse(rate["noncashSell"].ToString().ToString().Replace(',', '.'));
-
+                float buyRate = float.Parse(rate["noncashBuy"].ToString());
+                float sellRate = float.Parse(rate["noncashSell"].ToString());
 
                 ExchangeRate exchangeRate = new ExchangeRate(currency, unit, buyRate, sellRate);
                 rateList.AddExchangeRate(exchangeRate);

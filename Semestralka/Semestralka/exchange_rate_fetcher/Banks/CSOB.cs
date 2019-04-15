@@ -29,14 +29,14 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         //    }
         //}
 
-        public override async Task DownloadRateListAsync(DateTime now) {
-            String date = DateTimeParser.DateToUrlCSOB(now);
+        public override async Task DownloadRateListAsync() {
+            String date = DateTimeParser.DateToUrlCSOB(DateTime.Now);
 
             if (rateLists.Any(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())))
             {
                 rateLists.Remove(rateLists.Where(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())).First());
             }
-            RateList rateList = new RateList(now, exchangeRateListFolderPath);
+            RateList rateList = new RateList(DateTime.Now, exchangeRateListFolderPath);
             String responseData;
             using (var htttpClient = new HttpClient()) {
                 using (var response = await htttpClient.GetAsync(urlBase + date + urlEnd).ConfigureAwait(false)) {
@@ -54,8 +54,8 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
                     string currency = country.Attributes["ID"].Value;
                     int unit = int.Parse(country.Attributes["quota"].Value);
                     XmlNode FXcashless = country.SelectSingleNode("FXcashless");
-                    float buyRate = float.Parse(FXcashless.Attributes["Buy"].Value.ToString().Replace(',', '.'));
-                    float sellRate = float.Parse(FXcashless.Attributes["Sale"].Value.ToString().Replace(',', '.'));
+                    float buyRate = float.Parse(FXcashless.Attributes["Buy"].Value.ToString().Replace('.', ','));
+                    float sellRate = float.Parse(FXcashless.Attributes["Sale"].Value.ToString().Replace('.', ','));
 
                     var exchangeRate = new ExchangeRate(currency, unit, buyRate, sellRate);
 

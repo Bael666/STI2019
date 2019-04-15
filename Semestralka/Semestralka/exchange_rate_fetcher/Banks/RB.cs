@@ -39,14 +39,14 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         public RB() : base(BANK_NAME) {
         }
 
-        public override async Task DownloadRateListAsync(DateTime now) {
-            String date = DateTimeParser.DateToUrlRB(now);
+        public override async Task DownloadRateListAsync() {
+            String date = DateTimeParser.DateToUrlRB(DateTime.Now);
 
             if (rateLists.Any(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())))
             {
                 rateLists.Remove(rateLists.Where(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())).First());
             }
-            RateList rateList = new RateList(now, exchangeRateListFolderPath);
+            RateList rateList = new RateList(DateTime.Now, exchangeRateListFolderPath);
             String responseData;
             
             using (var htttpClient = new HttpClient()) {
@@ -91,13 +91,12 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
                 foreach (XmlNode currencyNode in buyNode.ChildNodes) {
                     string currency = currencyNode.Attributes["name"].Value.ToString();
                     int unit = int.Parse(currencyNode.Attributes["quota"].Value.ToString());
-                    float buyRate = float.Parse(currencyNode.Attributes["rate"].Value.ToString().Replace(',','.'));
-                    float sellRate = float.Parse(saleNode.SelectSingleNode("currency[@name='" + currency + "']/@rate").Value.ToString().Replace(',', '.'));
+                    float buyRate = float.Parse(currencyNode.Attributes["rate"].Value.ToString().Replace('.',','));
+                    float sellRate = float.Parse(saleNode.SelectSingleNode("currency[@name='" + currency + "']/@rate").Value.ToString().Replace('.', ','));
 
                     var exchangeRate = new ExchangeRate(currency, unit, buyRate, sellRate);
 
                     rateList.AddExchangeRate(exchangeRate);
-
                 }
 
                 rateList.SaveExchangeRates();

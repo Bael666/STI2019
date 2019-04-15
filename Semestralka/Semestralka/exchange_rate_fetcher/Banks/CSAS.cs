@@ -34,15 +34,15 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         //    }
         //}
 
-        public override async Task DownloadRateListAsync(DateTime now) {
-            String date = DateTimeParser.DateToUrlCSAS(now);
+        public override async Task DownloadRateListAsync() {
+            String date = DateTimeParser.DateToUrlCSAS(DateTime.Now);
             String responseData;
 
             if (rateLists.Any(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())))
             {
                 rateLists.Remove(rateLists.Where(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())).First());
             }
-            RateList rateList = new RateList(now, exchangeRateListFolderPath);
+            RateList rateList = new RateList(DateTime.Now, exchangeRateListFolderPath);
 
             using (var httpClient = new HttpClient { }) {
 
@@ -61,8 +61,8 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
             foreach (var dataSource in dataSourceNodes) {
                 String currency = dataSource.SelectSingleNode("td[@class='center code']").InnerText;
                 int unit = int.Parse(dataSource.SelectSingleNode("td[@class='right unit bigrightpad']").InnerText);
-                float buyRate = float.Parse(dataSource.SelectSingleNode("td[@class='right buy']").InnerText.ToString().Replace(',', '.'));
-                float sellRate = float.Parse(dataSource.SelectSingleNode("td[@class='right sell']").InnerText.ToString().Replace(',', '.'));
+                float buyRate = float.Parse(dataSource.SelectSingleNode("td[@class='right buy']").InnerText);
+                float sellRate = float.Parse(dataSource.SelectSingleNode("td[@class='right sell']").InnerText);
 
                 ExchangeRate exchangeRate = new ExchangeRate(currency, unit, buyRate, sellRate);
 

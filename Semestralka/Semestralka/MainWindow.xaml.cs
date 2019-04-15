@@ -84,12 +84,6 @@ namespace Semestralka
             listBank.Add(new CSOB());
             foreach (ABank bank in listBank)
             {
-                try {
-                    Task download2 = bank.DownloadRateListAsync(DateTime.Now.AddDays(-1));
-                    download2.Wait();
-                } catch (Exception e) {
-                    // download failed
-                }
                 bank.RateListsLoadAll(); //nacist ze vsech souboru
             }
 
@@ -334,7 +328,13 @@ namespace Semestralka
 
                 if (chosen >= 0) {
                     dataToday[chosen].doporučení = doporuceni;
-                }                
+                }
+
+
+                Console.WriteLine(cnb_zmena);
+
+
+                
 
                 foreach (var item in dataToday) {
                     dataGrid.Items.Add(item);
