@@ -28,7 +28,7 @@ namespace sti_semestralka.exchange_rate_fetcher
 
         //abstract public void DownloadRateLists(DateTime from, DateTime to);
 
-        abstract public Task DownloadRateListAsync();
+        abstract public Task DownloadRateListAsync(DateTime now);
 
         public void RateListsLoadAll() {
             rateLists = new List<RateList>();
