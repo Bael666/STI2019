@@ -304,7 +304,8 @@ namespace Semestralka
                     hlavicka.doporučení = "Chybi vcerejsi data";
                 }
 
-                String doporuceni = "Cena se nezmenila";
+                String doporuceni = "";
+                String doporuceniBezeZmeny = "Cena se nezmenila";
                 int chosen = -1;
 
                 if (cnb_zmena > 0) {
@@ -339,6 +340,10 @@ namespace Semestralka
 
                 if (chosen >= 0) {
                     dataToday[chosen].doporučení = doporuceni;
+                } else {
+                    if (doporuceni.Equals("")) {
+                        hlavicka.doporučení = doporuceniBezeZmeny;
+                    }
                 }
 
                 foreach (var item in dataToday) {
