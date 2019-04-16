@@ -246,9 +246,14 @@ namespace Semestralka
         }
 
         private void lbVolba_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            updateGrid();
+        }
+
+        private void updateGrid() {
             foreach (ABank bank in listBank) {
                 bank.RateListsLoadAll(); //nacist ze vsech souboru
             }
+            HelperAutomation.TransformIntoDict(listBank, dictMergeRates);
             dataGrid.Items.Clear();
             foreach (Object selecteditem in lbVolba.SelectedItems) {
                 string strItem = selecteditem as String;
@@ -288,7 +293,7 @@ namespace Semestralka
                 //}
                 var hlavicka = new MergeRates(strItem);
                 dataGrid.Items.Add(hlavicka); // hlavicka mena
-                dataGrid.Columns[dataGrid.Columns.Count-1].MinWidth = 120;
+                dataGrid.Columns[dataGrid.Columns.Count - 1].MinWidth = 120;
 
                 float cnb_zmena = 0;
                 try {
@@ -334,7 +339,7 @@ namespace Semestralka
 
                 if (chosen >= 0) {
                     dataToday[chosen].doporučení = doporuceni;
-                }                
+                }
 
                 foreach (var item in dataToday) {
                     dataGrid.Items.Add(item);
@@ -361,7 +366,7 @@ namespace Semestralka
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            
+            updateGrid();
         }
     }
 }
