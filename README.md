@@ -1,4 +1,4 @@
 # STI2019
 C#  
-Aktualni verze: 1.0.3  
-Link: https://uloz.to/!o8vrcUgjS/kroniky-jakuba-vandrovce-mp3
+Aktualni verze: 1.0.2  
+Link: https://uloz.to/!N3VpWkMCo63s/sti-release-1-0-2-zip
