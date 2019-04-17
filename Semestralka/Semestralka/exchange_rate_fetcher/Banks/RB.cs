@@ -39,14 +39,14 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         public RB() : base(BANK_NAME) {
         }
 
-        public override async Task DownloadRateListAsync() {
-            String date = DateTimeParser.DateToUrlRB(DateTime.Now);
+        public override async Task DownloadRateListAsync(DateTime now) {
+            String date = DateTimeParser.DateToUrlRB(now);
 
             if (rateLists.Any(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())))
             {
                 rateLists.Remove(rateLists.Where(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())).First());
             }
-            RateList rateList = new RateList(DateTime.Now, exchangeRateListFolderPath);
+            RateList rateList = new RateList(now, exchangeRateListFolderPath);
             String responseData;
             
             using (var htttpClient = new HttpClient()) {

@@ -29,14 +29,14 @@ namespace sti_semestralka.exchange_rate_fetcher.Banks {
         //    }
         //}
 
-        public override async Task DownloadRateListAsync() {
-            String date = DateTimeParser.DateToUrlCSOB(DateTime.Now);
+        public override async Task DownloadRateListAsync(DateTime now) {
+            String date = DateTimeParser.DateToUrlCSOB(now);
 
             if (rateLists.Any(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())))
             {
                 rateLists.Remove(rateLists.Where(x => x.GetDate().ToString().Contains(DateTime.Now.Date.ToString())).First());
             }
-            RateList rateList = new RateList(DateTime.Now, exchangeRateListFolderPath);
+            RateList rateList = new RateList(now, exchangeRateListFolderPath);
             String responseData;
             using (var htttpClient = new HttpClient()) {
                 using (var response = await htttpClient.GetAsync(urlBase + date + urlEnd).ConfigureAwait(false)) {

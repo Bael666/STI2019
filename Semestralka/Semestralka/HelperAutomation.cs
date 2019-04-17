@@ -34,7 +34,22 @@ namespace Semestralka
                         }
                         else
                         {
+                            // if any rate got the same bank, remove old
+                            List<MergeRates> toDelete = new List<MergeRates>();
+
+                            foreach (MergeRates mergeRate in dictMergeRates[new Tuple<string, DateTime>(rate.currency, rateItem.GetDate())]) {
+                                if (mergeRate.banka.Equals(mr.banka)) {
+                                    toDelete.Add(mergeRate);
+                                }
+                            }
+
+                            foreach (MergeRates mergeRate in toDelete) {
+                                dictMergeRates[new Tuple<string, DateTime>(rate.currency, rateItem.GetDate())].Remove(mergeRate);
+                            }
+
+
                             dictMergeRates[new Tuple<string, DateTime>(rate.currency, rateItem.GetDate())].Add(mr);
+
                         }
                     }
                 }

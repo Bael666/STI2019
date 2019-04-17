@@ -48,12 +48,16 @@ namespace sti_semestralka.exchange_rate_fetcher {
 
             String line;
             String[] exchangeRateData;
-            using (StreamReader inputFile = new StreamReader(filePath)) {
-                while ((line = inputFile.ReadLine()) != null) {
-                    exchangeRateData = line.Split(';');
-                    ExchangeRate exchangeRate = new ExchangeRate(exchangeRateData[0], int.Parse(exchangeRateData[1]), float.Parse(exchangeRateData[2]), float.Parse(exchangeRateData[3]));
-                    exchangeRates.Add(exchangeRate);
+            try {
+                using (StreamReader inputFile = new StreamReader(filePath)) {
+                    while ((line = inputFile.ReadLine()) != null) {
+                        exchangeRateData = line.Split(';');
+                        ExchangeRate exchangeRate = new ExchangeRate(exchangeRateData[0], int.Parse(exchangeRateData[1]), float.Parse(exchangeRateData[2]), float.Parse(exchangeRateData[3]));
+                        exchangeRates.Add(exchangeRate);
+                    }
                 }
+            } catch (FileNotFoundException err) {
+                // file deleted after initial load
             }
         }
 

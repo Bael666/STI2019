@@ -111,7 +111,6 @@ namespace Semestralka {
                     }
                     for (; j < dates.Length; j++) {
                         series.Points.AddXY(dates[j], data[j]);
-                        Console.WriteLine("{2} == date: {0}, data: {1}", dates[j], data[j], name);
                     }
 
 
