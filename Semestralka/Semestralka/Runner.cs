@@ -18,7 +18,7 @@ namespace Semestralka
         {
 
             var dueTime = TimeSpan.FromSeconds(1);
-            var interval = TimeSpan.FromSeconds(3600);
+            var interval = TimeSpan.FromSeconds(900);
 
             //Task.Run(() => CheckingRepositoryPeriodicAsync(OnTick, dueTime, interval, cts.Token, getter).Wait());
             CheckingRepositoryPeriodicAsync(dueTime, interval, cts.Token, listBank, dictMergeRates);//CancellationToken.None
@@ -79,6 +79,9 @@ namespace Semestralka
 
                     HelperAutomation.TransformIntoDict(listBank, dictMergeRates);
                     HelperAutomation.CountDifference(dictMergeRates);
+                    
+                    win.updateGrid();
+                    win.graphUpdate(true);
                 }
             }));
         }
