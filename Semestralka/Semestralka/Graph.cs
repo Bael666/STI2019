@@ -20,11 +20,15 @@ namespace Semestralka {
         List<DateTime[]> dates;
         List<List<List<double>>> bankDataSell;
         List<List<List<double>>> bankDataBuy;
-        Boolean week = true;
+        static Boolean week = true;
         FlowLayoutPanel panel;
 
         public Graph(List<String> title, List<DateTime[]> dates, List<List<List<double>>> bankDataSell, List<List<List<double>>> bankDataBuy) {
             InitializeComponent();
+            refreshGraphs(title, dates, bankDataSell, bankDataBuy);
+        }
+        
+        public void refreshGraphs(List<String> title, List<DateTime[]> dates, List<List<List<double>>> bankDataSell, List<List<List<double>>> bankDataBuy) {
             this.Text = "Vývoj ceny vůči České národní bance";
             this.panel = flowLayoutPanel1;
             this.title = title;
@@ -33,9 +37,8 @@ namespace Semestralka {
             this.bankDataBuy = bankDataBuy;
 
             refreshGraphs();
-            
         }
-
+                
         private void refreshGraphs() {
             foreach (Control chart in panel.Controls) {
                 panel.Controls.Remove(chart);

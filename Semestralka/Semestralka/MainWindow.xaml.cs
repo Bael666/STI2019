@@ -120,11 +120,13 @@ namespace Semestralka
             }
         }
 
-        private void btnGraf_Click(object sender, RoutedEventArgs e)
-        {
+        public void graphUpdate(Boolean updateOnly) {
             if (dataGrid.Items.Count == 0) {
-                System.Windows.MessageBox.Show("No data available");
-                return;
+                if (!updateOnly) {
+                    System.Windows.MessageBox.Show("No data available");
+                    return;
+                }
+                if (graph != null && graph.IsDisposed) { return; } else if (graph != null) { graph.Close(); return; }
             }
 
 
@@ -146,8 +148,7 @@ namespace Semestralka
             var bankDataSellList = new List<List<List<double>>>();
             var bankDataBuyList = new List<List<List<double>>>();
 
-            foreach (Object selecteditem in lbVolba.SelectedItems)
-            {
+            foreach (Object selecteditem in lbVolba.SelectedItems) {
                 string currency = selecteditem as String;
                 List<double> csasData = new List<double>();
                 List<double> csobData = new List<double>();
@@ -156,8 +157,7 @@ namespace Semestralka
                 List<List<double>> bankDataSell = new List<List<double>> { kbData, rbData, csasData, csobData };
                 List<List<double>> bankDataBuy = new List<List<double>> { new List<double>(), new List<double>(), new List<double>(), new List<double>() };
 
-                for (int d = 0; d < dates.Length; d++)
-                {
+                for (int d = 0; d < dates.Length; d++) {
                     var date = dates[d];
 
                     var cnb = listBank[0];
@@ -165,33 +165,24 @@ namespace Semestralka
                     var rateLists = cnb.getRateLists();
                     ExchangeRate exchangeRate_cnb = null;
 
-                    foreach (RateList rateList in rateLists)
-                    {
-                        if (rateList.GetDate().Date == date.Date)
-                        {
-                            foreach (ExchangeRate er in rateList.getExchangeRates())
-                            {
-                                if (er.currency == currency)
-                                {
+                    foreach (RateList rateList in rateLists) {
+                        if (rateList.GetDate().Date == date.Date) {
+                            foreach (ExchangeRate er in rateList.getExchangeRates()) {
+                                if (er.currency == currency) {
                                     exchangeRate_cnb = er;
                                 }
                             }
                         }
                     }
 
-                    for (int i = 1; i < listBank.Count; i++)
-                    {
+                    for (int i = 1; i < listBank.Count; i++) {
                         var bankRates = listBank[i].getRateLists();
                         ExchangeRate exchangeRate_other = null;
 
-                        foreach (RateList rateList in bankRates)
-                        {
-                            if (rateList.GetDate().Date == date.Date)
-                            {
-                                foreach (ExchangeRate er in rateList.getExchangeRates())
-                                {
-                                    if (er.currency == currency)
-                                    {
+                        foreach (RateList rateList in bankRates) {
+                            if (rateList.GetDate().Date == date.Date) {
+                                foreach (ExchangeRate er in rateList.getExchangeRates()) {
+                                    if (er.currency == currency) {
                                         exchangeRate_other = er;
                                     }
                                 }
@@ -201,8 +192,7 @@ namespace Semestralka
                         double sellDifference = 0;
                         double buyDifference = 0;
 
-                        if (exchangeRate_other != null && exchangeRate_cnb != null)
-                        {
+                        if (exchangeRate_other != null && exchangeRate_cnb != null) {
                             buyDifference = (double)exchangeRate_cnb.buyRate - (double)exchangeRate_other.buyRate;
                             sellDifference = (double)exchangeRate_other.sellRate - (double)exchangeRate_cnb.sellRate;
                         }
@@ -216,12 +206,31 @@ namespace Semestralka
                 bankDataSellList.Add(bankDataSell);
                 bankDataBuyList.Add(bankDataBuy);
             }
+            //System.Drawing.Point topLeft = new System.Drawing.Point();
 
-            if (graph != null) {
-                graph.Close();
+            if (updateOnly) {
+                if (graph != null && !graph.IsDisposed) {
+                    graph.refreshGraphs(currencyList, datesList, bankDataSellList, bankDataBuyList);
+                }
+            } else {
+                if (graph == null || graph.IsDisposed) {
+                    graph = new Graph(currencyList, datesList, bankDataSellList, bankDataBuyList);
+                    graph.Show();
+                } else if (graph != null) {
+                    //topLeft = graph.Location;
+                    graph.refreshGraphs(currencyList, datesList, bankDataSellList, bankDataBuyList);
+                }
+                graph.Activate();
             }
-            graph = new Graph(currencyList, datesList, bankDataSellList, bankDataBuyList);
-            graph.Show();
+
+            //graph.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            //graph.Location = topLeft;
+            
+        }
+
+        private void btnGraf_Click(object sender, RoutedEventArgs e)
+        {
+            graphUpdate(false);
         }
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
@@ -247,9 +256,10 @@ namespace Semestralka
 
         private void lbVolba_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             updateGrid();
+            graphUpdate(true);
         }
 
-        private void updateGrid() {
+        public void updateGrid() {
             foreach (ABank bank in listBank) {
                 bank.RateListsLoadAll(); //nacist ze vsech souboru
             }
@@ -372,6 +382,7 @@ namespace Semestralka
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
             updateGrid();
+            graphUpdate(true);
         }
     }
 }
