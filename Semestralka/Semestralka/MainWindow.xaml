@@ -12,7 +12,7 @@
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Content="Rysaeva, Pilař, Pecina" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="141" Grid.ColumnSpan="3"/>
+        <Label x:Name="lbVerzeLocal" Content="" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="141" Grid.ColumnSpan="3"/>
         <Label Content="Volba měn" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Grid.ColumnSpan="3"/>
         <DataGrid x:Name="dataGrid" HorizontalAlignment="Left" Height="560" Margin="164,50,0,0" VerticalAlignment="Top" Width="620" IsReadOnly="true" Grid.ColumnSpan="3"/>
         <Button x:Name="btnGraf" Content="Graf" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="120" Click="btnGraf_Click" Grid.ColumnSpan="3"/>
