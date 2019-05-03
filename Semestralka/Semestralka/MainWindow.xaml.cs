@@ -33,7 +33,10 @@ namespace Semestralka
         public MainWindow()
         {
             InitializeComponent();
-            Title = "Verze aplikace: " + Version.versionLocal;
+            //Title = "Verze aplikace: " + Version.versionLocal;
+            Title = "Rysaeva, Pilař, Pecina";
+            btnRefresh.Visibility = Visibility.Hidden;
+            lbVerzeLocal.Content = "Verze aplikace: " + Version.versionLocal;
             DataGridTextColumn c1 = new DataGridTextColumn();
             c1.Header = "banka";
             c1.Binding = new Binding("banka");
