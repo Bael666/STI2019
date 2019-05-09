@@ -103,13 +103,14 @@ namespace Semestralka {
                 item.SubItems.Add(String.Format("{0:0.0000}", korSell));
                 item.SubItems.Add(String.Format("{0:0.0000}", rozBuy));
                 item.SubItems.Add(String.Format("{0:0.0000}", rozSell));
-                item.SubItems.Add(String.Format("{0:0.0000}", sazBuy));
-                item.SubItems.Add(String.Format("{0:0.0000}", sazSell));
+                item.SubItems.Add(String.Format("{0:0.0000}%", 100*sazBuy));
+                item.SubItems.Add(String.Format("{0:0.0000}%", 100*sazSell));
 
 
                 listView.Items.Add(item);
                 
             }
+
         }
 
 
