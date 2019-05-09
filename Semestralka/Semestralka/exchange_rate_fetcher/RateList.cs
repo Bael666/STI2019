@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace sti_semestralka.exchange_rate_fetcher {
-    public class RateList {
+    public class RateList : IComparable<RateList> {
 
         private DateTime date;
         private List<ExchangeRate> exchangeRates;
@@ -67,6 +67,10 @@ namespace sti_semestralka.exchange_rate_fetcher {
                 result += exrate.ToString() + Environment.NewLine;
             }
             return result;
+        }
+
+        public int CompareTo(RateList other) {
+            return this.GetDate().CompareTo(other.GetDate());
         }
     }
 }

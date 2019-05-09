@@ -29,5 +29,6 @@
             </TextBox.Style>
         </TextBox>
         <Button x:Name="btnRefresh" Grid.ColumnSpan="3" Content="Refresh table" HorizontalAlignment="Left" Margin="10,97,0,0" VerticalAlignment="Top" Width="120" Click="btnRefresh_Click"/>
+        <Button x:Name="analyza" Grid.ColumnSpan="3" Content="Analyza" HorizontalAlignment="Left" Margin="10,122,0,0" VerticalAlignment="Top" Width="120" Click="Analyza_Click_1"/>
     </Grid>
 </Window>
