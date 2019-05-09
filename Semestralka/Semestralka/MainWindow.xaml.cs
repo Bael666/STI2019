@@ -387,5 +387,10 @@ namespace Semestralka
             updateGrid();
             graphUpdate(true);
         }
+
+        private void Analyza_Click_1(object sender, RoutedEventArgs e) {
+            Analyza analyza = new Analyza();
+            analyza.Show();
+        }
     }
 }
