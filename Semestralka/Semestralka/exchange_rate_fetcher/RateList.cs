@@ -70,7 +70,7 @@ namespace sti_semestralka.exchange_rate_fetcher {
         }
 
         public int CompareTo(RateList other) {
-            return this.GetDate().CompareTo(other.GetDate());
+            return other.GetDate().CompareTo(this.GetDate());
         }
     }
 }

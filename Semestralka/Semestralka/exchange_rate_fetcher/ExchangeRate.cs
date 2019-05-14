@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace sti_semestralka.exchange_rate_fetcher
 {
-    public class ExchangeRate
-    {
+    public class ExchangeRate : IComparable<ExchangeRate> {
         //private String currency;
         //private int unit;
         //private float buyRate;
@@ -37,6 +36,10 @@ namespace sti_semestralka.exchange_rate_fetcher
         public override string ToString()
         {
             return currency + ";" + unit + ";" + buyRate + ";" + sellRate;
+        }
+
+        public int CompareTo(ExchangeRate other) {
+            return this.currency.CompareTo(other.currency);
         }
     }
 }
