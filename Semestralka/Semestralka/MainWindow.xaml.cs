@@ -16,7 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.IO;
 
 namespace Semestralka
 {
@@ -121,7 +121,10 @@ namespace Semestralka
             {
                 ex.ToString();
             }
+
+            loadCurrencies();
         }
+        
 
         public void graphUpdate(Boolean updateOnly) {
             if (dataGrid.Items.Count == 0) {
@@ -260,6 +263,7 @@ namespace Semestralka
         private void lbVolba_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             updateGrid();
             graphUpdate(true);
+            saveCurrencies();
         }
 
         public void updateGrid() {
@@ -392,5 +396,44 @@ namespace Semestralka
             Analyza analyza = new Analyza();
             analyza.Show();
         }
+
+
+        private void saveCurrencies() {
+            try {
+                var filePath = Path.Combine("Bank", "session.txt");
+
+                string toSave = "";
+
+                foreach (Object selecteditem in lbVolba.SelectedItems) {
+                    string currency = selecteditem as String;
+                    toSave += currency + Environment.NewLine;
+                }
+
+                using (StreamWriter outputFile = new StreamWriter(filePath)) {
+                    outputFile.Write(toSave);
+                }
+            } catch (Exception e) { }
+        }
+
+        private void loadCurrencies() {
+            try {
+                var filePath = Path.Combine("Bank", "session.txt");
+                string currency;
+                using (StreamReader inputFile = new StreamReader(filePath)) {
+                    while ((currency = inputFile.ReadLine()) != null) {
+                        var index = 0;
+                        for (int i = 0; i < lbVolba.Items.Count; i++) {
+                            if (lbVolba.Items[i].Equals(currency)) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        var item = lbVolba.Items[index];
+                        lbVolba.SelectedItems.Add(item);
+                    }
+                }
+            } catch (Exception e) { }
+        }
+
     }
 }
