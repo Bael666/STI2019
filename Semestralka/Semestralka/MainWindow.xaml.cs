@@ -78,6 +78,7 @@ namespace Semestralka
             BankInit();
             Thread.Sleep(20000);
         }
+
         public void BankInit()
         {
             listBank = new List<ABank>();
@@ -434,7 +435,7 @@ namespace Semestralka
         }
 
         private void Analyza_Click_1(object sender, RoutedEventArgs e) {
-            Analyza analyza = new Analyza();
+            Analyza analyza = new Analyza(listBank);
             analyza.Show();
         }
 
