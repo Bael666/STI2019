@@ -1,4 +1,4 @@
 # STI2019
 C#  
-Aktualni verze: 1.0.3  
-Link: https://uloz.to/!QcCf6kftjjBE/sti-release-1-0-3-zip
+Aktualni verze: 1.0.4  
+Link: https://uloz.to/!LCcTp4WVEs0r/sti-release-1-0-4-zip

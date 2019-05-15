@@ -16,7 +16,7 @@ namespace Semestralka {
         DateTime[] week;
         List<ABank> banks;
 
-        public Analyza() {
+        public Analyza(List<ABank> listBank) {
             InitializeComponent();
 
             listView.GridLines = true;
@@ -24,13 +24,13 @@ namespace Semestralka {
             listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
             
 
-            init();
+            init(listBank);
 
             listView.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
 
-        private void init() {
+        private void init(List<ABank> listBank) {
             week = new DateTime[] { DateTime.Today.AddDays(-6), DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-4),
                 DateTime.Today.AddDays(-3), DateTime.Today.AddDays(-2), DateTime.Today.AddDays(-1), DateTime.Today};
 
@@ -42,19 +42,16 @@ namespace Semestralka {
             banks.Add(new CSAS());
             banks.Add(new CSOB());
 
-
-            
-            foreach (var day in week) {
-                foreach (var bank in banks) {
-                    try {
-                        Task download = bank.DownloadRateListAsync(day);
-                        download.ContinueWith(task => { Console.WriteLine("Download completed"); });
-                    } catch (Exception e) { // download fail
+            foreach (var bank in banks) {
+                try {
+                    var rateLists = listBank.FirstOrDefault(o => o.name.Equals(bank.name)).getRateLists();
+                    rateLists.Sort();
+                    for (int i = 0; i < 7; i++) {
+                        bank.getRateLists().Add(rateLists[i]);
                     }
+                } catch (Exception e) { // download fail
                 }
             }
-
-            System.Threading.Thread.Sleep(6000);
 
             // usd only
             Dictionary<String, Double[]> nakup = new Dictionary<string, double[]>();

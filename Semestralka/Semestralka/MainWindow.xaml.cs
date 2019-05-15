@@ -16,7 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.IO;
 
 namespace Semestralka
 {
@@ -29,6 +29,7 @@ namespace Semestralka
         private static Dictionary<Tuple<string, DateTime>, List<MergeRates>> dictMergeRates = new Dictionary<Tuple<string, DateTime>, List<MergeRates>>();
         List<ABank> listBank;
         Graph graph;
+        int minusDaysYesterday = -1;
 
         public MainWindow()
         {
@@ -77,6 +78,7 @@ namespace Semestralka
             BankInit();
             Thread.Sleep(20000);
         }
+
         public void BankInit()
         {
             listBank = new List<ABank>();
@@ -85,15 +87,16 @@ namespace Semestralka
             listBank.Add(new RB());
             listBank.Add(new CSAS());
             listBank.Add(new CSOB());
-            foreach (ABank bank in listBank)
-            {
-                try {
-                    Task download2 = bank.DownloadRateListAsync(DateTime.Now.AddDays(-1));
-                    download2.Wait();
-                } catch (Exception e) {
-                    // download failed
+            for (int i = 1; i <= 7; i++) {
+                foreach (ABank bank in listBank) {
+                    try {
+                        Task download2 = bank.DownloadRateListAsync(DateTime.Now.AddDays(-i));
+                        download2.Wait();
+                    } catch (Exception e) {
+                        // download failed
+                    }
+                    bank.RateListsLoadAll(); //nacist ze vsech souboru
                 }
-                bank.RateListsLoadAll(); //nacist ze vsech souboru
             }
 
             // naplneni list boxu
@@ -121,7 +124,10 @@ namespace Semestralka
             {
                 ex.ToString();
             }
+
+            loadCurrencies();
         }
+        
 
         public void graphUpdate(Boolean updateOnly) {
             if (dataGrid.Items.Count == 0) {
@@ -132,14 +138,15 @@ namespace Semestralka
                 if (graph != null && graph.IsDisposed) { return; } else if (graph != null) { graph.Close(); return; }
             }
 
-
+            /*
             DateTime[] week = new DateTime[] { DateTime.Today.AddDays(-6), DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-4),
                 DateTime.Today.AddDays(-3), DateTime.Today.AddDays(-2), DateTime.Today.AddDays(-1), DateTime.Today};
+                */
 
             DateTime[] month = new DateTime[30];
 
             for (int i = 0; i < month.Length; i++) {
-                month[i] = DateTime.Today.AddDays(-i);
+                month[i] = DateTime.Today.AddDays(minusDaysYesterday + 1 - i);
             }
             Array.Reverse(month);
 
@@ -260,6 +267,7 @@ namespace Semestralka
         private void lbVolba_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             updateGrid();
             graphUpdate(true);
+            saveCurrencies();
         }
 
         public void updateGrid() {
@@ -268,12 +276,50 @@ namespace Semestralka
             }
             HelperAutomation.TransformIntoDict(listBank, dictMergeRates);
             dataGrid.Items.Clear();
+
+            // find first change between cnb and set yesterday to it
+            minusDaysYesterday = -1;
+            List<RateList> cnbRateLists;
+            foreach (ABank bank in listBank) {
+                if (bank.name.Equals("CNB")) {
+                    cnbRateLists = bank.getRateLists();
+                    cnbRateLists.Sort();
+                    try {
+                        for (int i = 1; i <= 7; i++) {
+                            var different = false;
+                            var ratesToday = cnbRateLists[0].getExchangeRates();
+                            var ratesYesterday = cnbRateLists[i].getExchangeRates();
+                            ratesToday.Sort();
+                            ratesYesterday.Sort();
+
+                            for (int j = 0; j < ratesToday.Count; j++) {
+                                var rateToday = ratesToday[j];
+                                var rateYesterday = ratesYesterday[j];
+
+                                if (rateToday.buyRate != rateYesterday.buyRate) {
+                                    minusDaysYesterday = -i;
+                                    different = true;
+                                    break;
+                                }
+                            }
+
+                            if (different == true) {
+                                break;
+                            }
+                        }
+                    } catch (Exception e) { }
+
+                    break;
+
+                }
+            }
+
             foreach (Object selecteditem in lbVolba.SelectedItems) {
                 string strItem = selecteditem as String;
                 List<MergeRates> dataToday = new List<MergeRates>();
                 List<MergeRates> dataYesterday = new List<MergeRates>();
                 try {
-                    dataYesterday = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date.AddDays(-1))];
+                    dataYesterday = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date.AddDays(minusDaysYesterday))];
                     dataToday = dictMergeRates[Tuple.Create<string, DateTime>(strItem, DateTime.Now.Date)];
                 } catch (KeyNotFoundException error) {
                     dataToday = new List<MergeRates>();
@@ -389,8 +435,47 @@ namespace Semestralka
         }
 
         private void Analyza_Click_1(object sender, RoutedEventArgs e) {
-            Analyza analyza = new Analyza();
+            Analyza analyza = new Analyza(listBank);
             analyza.Show();
         }
+
+
+        private void saveCurrencies() {
+            try {
+                var filePath = Path.Combine("Bank", "session.txt");
+
+                string toSave = "";
+
+                foreach (Object selecteditem in lbVolba.SelectedItems) {
+                    string currency = selecteditem as String;
+                    toSave += currency + Environment.NewLine;
+                }
+
+                using (StreamWriter outputFile = new StreamWriter(filePath)) {
+                    outputFile.Write(toSave);
+                }
+            } catch (Exception e) { }
+        }
+
+        private void loadCurrencies() {
+            try {
+                var filePath = Path.Combine("Bank", "session.txt");
+                string currency;
+                using (StreamReader inputFile = new StreamReader(filePath)) {
+                    while ((currency = inputFile.ReadLine()) != null) {
+                        var index = 0;
+                        for (int i = 0; i < lbVolba.Items.Count; i++) {
+                            if (lbVolba.Items[i].Equals(currency)) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        var item = lbVolba.Items[index];
+                        lbVolba.SelectedItems.Add(item);
+                    }
+                }
+            } catch (Exception e) { }
+        }
+
     }
 }

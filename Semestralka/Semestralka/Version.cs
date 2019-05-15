@@ -10,7 +10,7 @@ namespace Semestralka
 {
     public class Version
     {
-        public static string versionLocal = "1.0.3";
+        public static string versionLocal = "1.0.4";
         public static string versionServer = "";
         public static string versionLink = "";
         public static async Task GetVersionFromServer()
